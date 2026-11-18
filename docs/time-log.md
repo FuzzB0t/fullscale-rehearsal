@@ -46,3 +46,11 @@ The per-task split is approximate.
 | **3a** verification: default identity, 8-combination matrix, sticky scroll check, old-entry and field-less check | ~5 min | **Applies on day one**, about 15 min by hand. |
 | **3a** apply guide + NOTES | ~1 min of the clock, written alongside | |
 | **3a total** | **~15 min** | 2026-11-18, 16:13 to 16:28. |
+
+| Task | Time | Day-one relevance |
+|---|---|---|
+| **3b** read Craft's permission code, probe the group form | ~2 min | Reusable: the permission table in the apply guide saves this on day one. |
+| **3b** both groups through the control panel (scripted) | ~1 min | **Applies on day one**, about 10 min by hand (Method A). |
+| **3b** two test users, 54-check permission matrix, sign-in checks in the control panel | ~2 min | **Applies on day one**, about 10 min. |
+| **3b** apply guide + NOTES | ~1 min | |
+| **3b total** | **~6 min** | 2026-11-18, 16:51 to 16:56 (machine clock). |

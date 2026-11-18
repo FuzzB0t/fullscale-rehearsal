@@ -74,7 +74,7 @@ Each lives on its own branch, merged to `main`, with an apply guide in `docs/app
 | Change | Branch | Status | Apply guide |
 |---|---|---|---|
 | 3a Layout fields: `layoutHeadline`, `layoutStickyMenu`, `layoutShowInSection` on the guide entry type | `portable/layout-fields` | Done. Defaults reproduce today's layout exactly (HTML and screenshots identical); 8 of 8 option combinations pass; sticky verified by scrolling. | [docs/apply/3a-layout-fields.md](docs/apply/3a-layout-fields.md) |
-| 3b User groups: Content Drafters, Publishers | `portable/user-groups` | Not started | |
+| 3b User groups: Content Drafters, Publishers | `portable/user-groups` | Done. Permission matrix 54 of 54; both test users sign in and see what their group allows. | [docs/apply/3b-user-groups.md](docs/apply/3b-user-groups.md) |
 | 3c MCP settings | `portable/mcp-settings` | Not started | |
 
 Findings from 3a that matter on day one:
@@ -84,6 +84,16 @@ Findings from 3a that matter on day one:
 - **Every new field touches `project.yaml`** (`dateModified` and a `meta.__names__` line), so expect merge conflicts there. `craft project-config/touch` resolves the `dateModified` one.
 - **Whitespace-only HTML differences are expected** when a template uses Twig `{% set %}` capture. Compare with whitespace around tags normalised, plus screenshots.
 - Keep YAML ASCII. Curly quotes typed into field names or instructions land as non-ASCII in project config. Fixed here by editing the fields through the control panel.
+
+Findings from 3b that matter on day one:
+
+- **Group permissions are stored with site-specific UIDs** (`viewentries:<section uid>`), so the group YAML cannot be copied to their site. Recreate the groups in the control panel, or copy the YAML after swapping in their section and volume UIDs.
+- **Saving the first user group makes Craft write `config/project/users/users.yaml`** (and removes the `users:` block from `project.yaml`). It holds site-wide settings (`requireEmailVerification`, `allowPublicRegistration`, `require2fa`). Never copy it onto their site.
+- **`accessCp` is required for MCP element tools**, plus normal element permissions. There is no separate "use MCP" permission.
+- **Drafts need only view access.** Craft lets anyone who can view an entry create a draft of it. Applying one needs `save` on the draft and `saveCanonical` on the live entry, so Publishers get `savePeerEntryDrafts` + `saveEntries` + `savePeerEntries`.
+- **MCP permission refusals read as "Draft not found."** in the draft tools (from the source; confirm over HTTP in Step 5).
+- **Test users** (fake, passwords in `.local/credentials.txt`): `maya.okafor` (Content Drafters), `daniel.reyes` (Publishers). Step 4 reuses them.
+- Drafters cannot create new guides (a draft is a copy of an existing entry, and a new entry needs `createEntries`). Policy question for FullScale, see open questions.
 
 ## REPLICA (throwaway): guide content model and templates
 
@@ -107,3 +117,6 @@ Replaced by FullScale's real setup on day one. Built through the control panel (
 - Their rich-text field and its toolbar configuration (lists, headings, links).
 - Why the guides live under both `/guides/` and `/guides-for-teams/` on the real site.
 - Whether the guide-title and chapter-menu layout is sticky on the real site (the fetch could not tell).
+- Should staff drafters be able to propose brand-new guides, or only edit existing ones? (Needs `createEntries`, and a test of what that allows.)
+- Should staff be able to edit the "Guides for Teams" index page? (A separate single section; nobody has access in the replica.)
+- Do they already have user groups that grant access to Guides for Teams? (Permissions add up across groups.)
