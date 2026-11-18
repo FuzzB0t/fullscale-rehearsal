@@ -54,6 +54,8 @@ PHP 8.3 was chosen inside Craft 5's supported range; FullScale's real PHP versio
 | 7 | **Craft was created through a temp folder.** `ddev composer create-project` refuses a folder with extra files, so the project was built in the container and copied in. | Local only. |
 | 8 | **Mutagen "problems" label** in `ddev list`: it cannot create one symlink inside `vendor/craftcms/cms/.claude/skills` on Windows. Harmless. | Local only. Windows Developer Mode would silence it. |
 | 9 | **Windows line endings.** `.gitattributes` forces LF so branch switches don't rewrite files as CRLF. | Keep `.gitattributes` in the repo. |
+| 10 | **OAuth signing keys** live in `storage/oauth-*.key`, generated locally with `craft oauth/generate-keys` and git-ignored. | Generate on each real environment, or supply through `config/oauth.php`. They must persist across deploys and match on every server. Never commit them. |
+| 11 | **Node and the mkcert CA.** Node-based MCP clients need `NODE_EXTRA_CA_CERTS` locally. | Local only. Production has a public certificate. |
 
 ## Gotchas learned
 
@@ -75,7 +77,7 @@ Each lives on its own branch, merged to `main`, with an apply guide in `docs/app
 |---|---|---|---|
 | 3a Layout fields: `layoutHeadline`, `layoutStickyMenu`, `layoutShowInSection` on the guide entry type | `portable/layout-fields` | Done. Defaults reproduce today's layout exactly (HTML and screenshots identical); 8 of 8 option combinations pass; sticky verified by scrolling. | [docs/apply/3a-layout-fields.md](docs/apply/3a-layout-fields.md) |
 | 3b User groups: Content Drafters, Publishers | `portable/user-groups` | Done. Permission matrix 54 of 54; both test users sign in and see what their group allows. | [docs/apply/3b-user-groups.md](docs/apply/3b-user-groups.md) |
-| 3c MCP settings | `portable/mcp-settings` | Not started | |
+| 3c MCP settings: authenticated server on, public off, access level "Read and write" | `portable/mcp-settings` | Done. Verified over real HTTP + OAuth as the drafter at both access levels. | [docs/apply/3c-mcp-settings.md](docs/apply/3c-mcp-settings.md) |
 
 Findings from 3a that matter on day one:
 
@@ -91,9 +93,19 @@ Findings from 3b that matter on day one:
 - **Saving the first user group makes Craft write `config/project/users/users.yaml`** (and removes the `users:` block from `project.yaml`). It holds site-wide settings (`requireEmailVerification`, `allowPublicRegistration`, `require2fa`). Never copy it onto their site.
 - **`accessCp` is required for MCP element tools**, plus normal element permissions. There is no separate "use MCP" permission.
 - **Drafts need only view access.** Craft lets anyone who can view an entry create a draft of it. Applying one needs `save` on the draft and `saveCanonical` on the live entry, so Publishers get `savePeerEntryDrafts` + `saveEntries` + `savePeerEntries`.
-- **MCP permission refusals read as "Draft not found."** in the draft tools (from the source; confirm over HTTP in Step 5).
+- **MCP permission refusals are worded inconsistently**, confirmed over HTTP in 3c: applying a draft says "Draft not found.", deleting live content says "Entry not found.", changing live content says "You are not authorized to save this entry."
 - **Test users** (fake, passwords in `.local/credentials.txt`): `maya.okafor` (Content Drafters), `daniel.reyes` (Publishers). Step 4 reuses them.
 - Drafters cannot create new guides (a draft is a copy of an existing entry, and a new entry needs `createEntries`). Policy question for FullScale, see open questions.
+
+Findings from 3c that matter on day one:
+
+- **The access level is not a server setting.** Each person chooses Read only or Read and write on the OAuth consent screen. **Read and write** is the lowest level that lets a drafter create drafts: `drafts_create` and `elements_update` are not offered at Read only (14 tools versus 31). Full access is never offered to non-admins.
+- **"Read only" is pre-selected** on the consent screen, and Craft **remembers the approved level**: a reconnect skips the consent screen and reuses the highest level approved before (tested). Access tokens last 1 hour and refresh tokens 30 days. Staff must be told to choose Read and write.
+- **Read and write does not bypass permissions.** Drafter over HTTP: creates and edits their own draft, cannot apply it, cannot change or delete live content (messages above).
+- **OAuth signing keys are not covered by Craft's `storage/.gitignore`.** A plain `git add` would commit the private key. `.gitignore` now has `/storage/oauth-*.key` and `*.pem`. Day one: add that first, and check how their host persists `storage/` (or supply the keys through `config/oauth.php`).
+- **Node clients do not trust the Windows certificate store.** Local only: set `NODE_EXTRA_CA_CERTS` to `C:\Users\ultim\AppData\Local\mkcert\rootCA.pem` for any Node-based MCP client (the Claude Code CLI included). Verified with the test harness.
+- **The endpoint follows `cpTrigger`** and needs `accessCp`. Craft says to treat a custom `cpTrigger` as sensitive.
+- **Test harness:** `scripts/portable/_oauth.mjs` is a small OAuth + PKCE + MCP client that drives the consent screen with Playwright, so tests can run over the real endpoint without a manual sign-in. It registers ONE OAuth client and reuses it (registration is limited to 10 per IP per hour). It does not replace the Claude Code tests in Step 5.
 
 ## REPLICA (throwaway): guide content model and templates
 
@@ -120,3 +132,6 @@ Replaced by FullScale's real setup on day one. Built through the control panel (
 - Should staff drafters be able to propose brand-new guides, or only edit existing ones? (Needs `createEntries`, and a test of what that allows.)
 - Should staff be able to edit the "Guides for Teams" index page? (A separate single section; nobody has access in the replica.)
 - Do they already have user groups that grant access to Guides for Teams? (Permissions add up across groups.)
+- How does their host handle `storage/` across deploys and servers? (OAuth signing keys must persist and match, or be supplied through `config/oauth.php`.)
+- What is their `cpTrigger`, and is the control panel on a separate domain? (The MCP endpoint lives under it.)
+- How many staff will connect from one network? (Dynamic client registration is limited to 10 per IP per hour by default, adjustable in `config/oauth.php`.)

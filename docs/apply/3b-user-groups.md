@@ -49,7 +49,7 @@ Craft saves them lower-cased in project config (`viewentries:<uid>`). It reads t
 
 **Why each choice** (all read from Craft's source, `src/elements/Entry.php` and `src/mcp/Authorization.php`, and confirmed by the test below):
 
-- `accessCp` is required. The MCP element tools check it, and so does signing in to approve an MCP connection. It also gives basic read-only access to element pickers across the site, as Craft documents. With no other permissions the sidebar shows only Dashboard, Entries and Assets.
+- `accessCp` is required. Craft's default MCP endpoint (`/admin/mcp`) lives inside the control panel, and Craft's MCP settings page says only users with control panel access can use it. The `elements_schema` tool and the element-type resources also check it explicitly. Craft's own contributor notes add that it gives basic read-only access to element pickers across the site. With no other permissions the sidebar shows only Dashboard, Entries and Assets. Over the real MCP connection a drafter was able to sign in and work (see the 3c guide).
 - Drafting needs only *view*. Craft lets anyone who can view an entry create a draft of it. Drafters never get `saveEntries`, so they cannot change a live entry and cannot apply a draft.
 - `viewPeerEntries` is needed because the guides were created by other people. Without it a drafter sees none of them.
 - A drafter has no `viewPeerEntryDrafts`, so drafters cannot see each other's drafts. A publisher has it, which is what lets them find and apply a drafter's work.
@@ -107,8 +107,8 @@ Do this on their dev or staging copy with `allowAdminChanges` on, never on live.
 4. **Authors.** The replica's guides were authored by an admin. If their guides have no author or other authors, `viewPeerEntries` is what makes them visible. Keep it.
 5. **New guides.** Drafters cannot create new guides. A draft is a copy of an existing entry, and creating one from nothing needs `createEntries`. That is a policy choice, so ask FullScale. Do not add `createEntries` to Drafters without testing what a user who can create but not save can then do.
 6. **The index page.** The "Guides for Teams index" single section is not granted to anyone. Add it per group if staff should edit that page.
-7. **MCP errors are vague on purpose.** Craft's draft tools answer "Draft not found." when a user lacks permission, so a refused action can look like a missing one. Observed in the source. Confirmed over HTTP in Step 5.
-8. **This tests permission logic, not the MCP connection.** The same checks run over HTTP with OAuth in Step 5, with real tool calls.
+7. **MCP refusals are worded inconsistently, and some read like "not found".** Confirmed over HTTP with the drafter at "Read and write": applying their own draft answers "Draft not found.", deleting the live guide answers "Entry not found.", and changing the live guide answers "You are not authorized to save this entry." Staff will see these, so the staff instructions should say what they mean (see the 3c guide).
+8. **The matrix tests Craft's permission logic.** The same rules were then confirmed end to end over HTTP with OAuth as the real drafter (3c: drafter creates and edits a draft, cannot apply it, cannot change or delete the live entry). The recorded Step 5 cases repeat this through Claude Code.
 
 ## Roll back
 
