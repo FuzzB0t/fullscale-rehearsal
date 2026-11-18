@@ -34,3 +34,6 @@ Thumbs.db
 /fullscale-demo-prompt.md
 # Craft license key: local trial key for this sandbox, the real site has its own
 /config/license.key
+
+# Uploaded assets are content, not code
+/web/uploads/
