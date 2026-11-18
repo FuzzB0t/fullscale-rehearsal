@@ -1,0 +1,7 @@
+{# REPLICA (throwaway): "Explore guides" and "Continue to next step". #}
+<footer class="chapter-nav">
+  <a class="button button--secondary" href="{{ siteUrl('guides-for-teams') }}">EXPLORE GUIDES</a>
+  {% if next %}
+    <a class="button button--primary" href="{{ next.url }}">CONTINUE TO NEXT STEP</a>
+  {% endif %}
+</footer>

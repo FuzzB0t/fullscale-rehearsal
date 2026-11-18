@@ -21,3 +21,14 @@ Active figures are rough: measured command times plus diagnosis time.
 | Environment files + `scripts/use-env.ps1`, verified with `craft exec` | ~8 min | Production already has its own env settings. |
 | Playwright + Chromium (743 MB) + screenshot script | ~6 min | Reusable on day one. |
 | Pro edition trial through the control panel | ~3 min | **Check FullScale's edition**: Team allows one user group, Pro is needed for two. |
+
+## Step 2: Replica content model
+
+| Task | Time | Day-one relevance |
+|---|---|---|
+| Read three public pages (sub-agent, structure only) | ~1 min | None (replica). |
+| Control-panel automation scaffolding (login helper, probes, form selectors) | ~25 min | Reusable for Step 3's control-panel changes. |
+| Filesystem, volume, 9 fields, 6 entry types, Matrix, 2 sections | ~20 min | None (replica). Real model is imported/inspected on day one. |
+| CKEditor toolbar drag attempts (3, abandoned) | ~10 min | Lists must be added by hand in the control panel. |
+| Templates, CSS, fixture seeder, render checks | ~20 min | Template structure is reusable; fixture seeder is reused by CI in Step 6. |
+| **Step 2 total (active)** | **~75 min** | Started 2026-11-18 ~13:45, finished 14:20. |

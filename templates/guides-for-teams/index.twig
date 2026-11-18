@@ -1,0 +1,31 @@
+{# REPLICA (throwaway): Guides for Teams index at /guides-for-teams #}
+{% extends '_layout' %}
+{% set pageTitle = 'Guides For Teams' %}
+
+{% block content %}
+  {% set guides = craft.entries().section('guidesForTeams').level(1).all() %}
+  <div class="page">
+    <h1 class="page__title">Guides For Teams</h1>
+    <p class="page__intro">Practical guides to help school and system teams put blended and personalized learning into practice.</p>
+
+    {% for guide in guides %}
+      {% set chapters = guide.getChildren().all() %}
+      <section class="guide-summary">
+        {% if guide.guideIsNew %}<span class="badge badge--new">NEW</span>{% endif %}
+        {% set icon = guide.guideIcon.one() %}
+        {% if icon %}<img class="guide-summary__icon" src="{{ icon.url }}" alt="" width="48" height="48">{% endif %}
+        <h2 class="guide-summary__title"><a href="{{ guide.url }}">{{ guide.title }}</a></h2>
+        {% if guide.guideTagline %}<p class="guide-summary__tagline">{{ guide.guideTagline }}</p>{% endif %}
+        {% if chapters|length %}
+          <ul class="guide-summary__chapters">
+            {% for chapter in chapters %}
+              <li><a href="{{ chapter.url }}">{{ chapter.title }}</a></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </section>
+    {% else %}
+      <p>No guides have been published yet.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

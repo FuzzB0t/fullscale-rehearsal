@@ -1,0 +1,11 @@
+{# REPLICA (throwaway): "In this section" list, built from the body's H3 headings. #}
+{% if sections|length %}
+  <nav class="in-this-section" aria-label="In this section">
+    <h4 class="in-this-section__label">IN THIS SECTION</h4>
+    <ul>
+      {% for s in sections %}
+        <li><a href="#{{ s.id }}">{{ s.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </nav>
+{% endif %}

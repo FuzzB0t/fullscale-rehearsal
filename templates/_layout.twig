@@ -1,0 +1,35 @@
+{# REPLICA (throwaway): base layout approximating the public FullScale / TLA resource pages. #}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ pageTitle ?? siteName }} | Blended &amp; Personalized Learning Practices At Work (replica)</title>
+  <link rel="stylesheet" href="{{ siteUrl('assets/css/site.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-header__logo" href="{{ siteUrl('') }}">{{ siteName }}</a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="#">About</a>
+        <a href="#">Our Work</a>
+        <a href="{{ siteUrl('guides-for-teams') }}">Resources &amp; Guidance</a>
+        <a href="#">News</a>
+        <a href="#">Connect &amp; Collaborate</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>{{ siteName }}: local replica for rehearsal only. Not the real site.</p>
+      <p><a href="#">Privacy Policy</a> &middot; <a href="#">Terms of Use</a></p>
+    </div>
+  </footer>
+</body>
+</html>

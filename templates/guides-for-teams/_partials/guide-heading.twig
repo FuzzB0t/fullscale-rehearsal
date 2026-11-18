@@ -1,0 +1,20 @@
+{# REPLICA (throwaway): guide title as H1 with tagline, icon and the chapter menu. #}
+{% set icon = guide.guideIcon.one() %}
+<header class="guide-heading">
+  <h1 class="guide-heading__title">{{ guide.title }}</h1>
+  {% if guide.guideTagline %}<p class="guide-heading__tagline">{{ guide.guideTagline }}</p>{% endif %}
+  {% if icon %}<img class="guide-heading__icon" src="{{ icon.url }}" alt="" width="96" height="96">{% endif %}
+
+  {% if chapters|length %}
+    <nav class="chapter-menu" aria-label="Chapters in {{ guide.title }}">
+      <ul class="chapter-menu__list">
+        {% for chapter in chapters %}
+          <li class="chapter-menu__item{{ current and chapter.id == current.id ? ' is-current' : '' }}">
+            <a href="{{ chapter.url }}"{{ current and chapter.id == current.id ? ' aria-current="page"' : '' }}>{{ chapter.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+      <span class="chapter-menu__toggle" aria-hidden="true">&#9776;</span>
+    </nav>
+  {% endif %}
+</header>

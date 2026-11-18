@@ -1,0 +1,16 @@
+{# REPLICA (throwaway): resource cards (Strategy / Activity / Artifact). Each card is one link. #}
+{% set labels = { strategyCard: 'Strategy', activityCard: 'Activity' } %}
+{% if cards|length %}
+  <section class="cards" aria-label="Resources">
+    <div class="cards__grid">
+      {% for card in cards %}
+        {% set kind = card.type.handle|replace('Card', '')|lower %}
+        <a class="card card--{{ kind }}" href="{{ card.cardLink ? card.cardLink.url : '#' }}">
+          {% if labels[card.type.handle] is defined %}<span class="card__type">{{ labels[card.type.handle] }}</span>{% endif %}
+          <h4 class="card__title">{{ card.title }}</h4>
+          {% if card.cardDescription %}<p class="card__description">{{ card.cardDescription }}</p>{% endif %}
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}

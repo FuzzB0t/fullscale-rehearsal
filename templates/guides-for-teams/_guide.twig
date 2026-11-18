@@ -1,0 +1,12 @@
+{# REPLICA (throwaway): guide overview (a top-level entry in the structure). #}
+{% extends '_layout' %}
+{% set pageTitle = entry.title %}
+
+{% block content %}
+  {% set chapters = entry.getChildren().all() %}
+  <div class="guide-bar"><a class="guide-bar__link" href="{{ siteUrl('guides-for-teams') }}">GUIDES</a></div>
+  <div class="page">
+    {% include 'guides-for-teams/_partials/guide-heading' with { guide: entry, current: null, chapters: chapters } only %}
+    {% if not chapters|length %}<p>This guide has no chapters yet.</p>{% endif %}
+  </div>
+{% endblock %}

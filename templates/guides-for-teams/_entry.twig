@@ -1,0 +1,3 @@
+{# REPLICA (throwaway): one template for the whole Guides for Teams structure section.
+   Chapters get the full chapter page; guide-level entries get a short overview. #}
+{% extends entry.type.handle == 'chapter' ? 'guides-for-teams/_chapter' : 'guides-for-teams/_guide' %}

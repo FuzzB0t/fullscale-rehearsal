@@ -1,0 +1,12 @@
+{# REPLICA (throwaway): a video if there is a video URL, otherwise the hero image. #}
+{% set videoUrl = entry.chapterVideoUrl ? entry.chapterVideoUrl.url : null %}
+{% set hero = entry.chapterHeroImage.one() %}
+{% if videoUrl %}
+  <div class="chapter__media chapter__media--video">
+    <iframe src="{{ videoUrl|replace('watch?v=', 'embed/') }}" title="{{ entry.title }} video" allowfullscreen loading="lazy"></iframe>
+  </div>
+{% elseif hero %}
+  <div class="chapter__media chapter__media--hero">
+    <img src="{{ hero.url }}" alt="{{ hero.alt ?? hero.title }}">
+  </div>
+{% endif %}

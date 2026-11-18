@@ -1,0 +1,42 @@
+{# REPLICA (throwaway): chapter page. Order, top to bottom:
+   GUIDES bar > guide title (H1) + tagline + icon + chapter menu > "In this section" >
+   chapter title (H2) + subtitle > video or hero > body > resource cards > explore / continue. #}
+{% extends '_layout' %}
+
+{% set guide = entry.parent ?? entry %}
+{% set pageTitle = entry.title ~ ' - ' ~ guide.title %}
+
+{# Split the body at each <h3> so we can give every section heading an anchor and list them in "In this section". #}
+{% set bodyHtml = entry.chapterBody ? (entry.chapterBody ~ '') : '' %}
+{% set bodyParts = bodyHtml|split('<h3') %}
+{% set sections = [] %}
+{% for part in bodyParts|slice(1) %}
+  {% set sections = sections|merge([{
+    id: 'section-' ~ loop.index,
+    title: (part|split('</h3>')|first|split('>', 2)|last|striptags|trim),
+  }]) %}
+{% endfor %}
+
+{% block content %}
+  <div class="guide-bar"><a class="guide-bar__link" href="{{ siteUrl('guides-for-teams') }}">GUIDES</a></div>
+
+  <article class="page chapter">
+    {% include 'guides-for-teams/_partials/guide-heading' with { guide: guide, current: entry, chapters: guide.getChildren().all() } only %}
+
+    {% include 'guides-for-teams/_partials/in-this-section' with { sections: sections } only %}
+
+    <h2 class="chapter__title">{{ entry.title }}</h2>
+    {% if entry.chapterSubtitle %}<p class="chapter__subtitle">{{ entry.chapterSubtitle }}</p>{% endif %}
+
+    {% include 'guides-for-teams/_partials/chapter-media' with { entry: entry } only %}
+
+    <div class="chapter__body">
+      {{ bodyParts|first|raw }}
+      {% for part in bodyParts|slice(1) %}<h3 id="section-{{ loop.index }}"{{ part|raw }}{% endfor %}
+    </div>
+
+    {% include 'guides-for-teams/_partials/resource-cards' with { cards: entry.chapterResourceCards.all() } only %}
+
+    {% include 'guides-for-teams/_partials/chapter-footer-nav' with { next: entry.getNextSibling() } only %}
+  </article>
+{% endblock %}
