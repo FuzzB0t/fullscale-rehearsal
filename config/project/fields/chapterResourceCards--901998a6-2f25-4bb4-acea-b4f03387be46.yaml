@@ -1,0 +1,47 @@
+columnSuffix: null
+handle: chapterResourceCards
+instructions: null
+name: 'Resource cards'
+searchable: false
+settings:
+  createButtonLabel: 'Add a resource card'
+  defaultIndexViewMode: cards
+  enableVersioning: false
+  entryTypes:
+    -
+      __assoc__:
+        -
+          - uid
+          - bf6c8fc5-6f90-46e4-ac94-1e51f222073a # Strategy card
+        -
+          - group
+          - General
+    -
+      __assoc__:
+        -
+          - uid
+          - d26df13b-ff5c-401c-b5ed-07c1ace2f2ec # Activity card
+        -
+          - group
+          - General
+    -
+      __assoc__:
+        -
+          - uid
+          - 5913bf48-532f-4dce-ac17-bf13dd8ff9e7 # Artifact card
+        -
+          - group
+          - General
+  includeTableView: false
+  maxEntries: null
+  minEntries: null
+  pageSize: 50
+  propagationKeyFormat: null
+  propagationMethod: all
+  showCardsInGrid: false
+  viewMode: cards
+tip: null
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Matrix
+warning: null

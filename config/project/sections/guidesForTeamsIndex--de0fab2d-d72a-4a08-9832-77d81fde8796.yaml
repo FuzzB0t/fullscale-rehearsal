@@ -1,0 +1,22 @@
+defaultPlacement: end
+enableVersioning: true
+entryTypes:
+  -
+    uid: 695ac37a-78d3-4ab4-b891-23e960401318 # Index page
+handle: guidesForTeamsIndex
+maxAuthors: 1
+minAuthors: 1
+name: 'Guides for Teams index'
+previewTargets:
+  -
+    label: 'Primary entry page'
+    refresh: '1'
+    urlFormat: '{url}'
+propagationMethod: all
+siteSettings:
+  f35b4774-540c-4743-9e0f-faba6c2d2b99: # FullScale Rehearsal
+    enabledByDefault: true
+    hasUrls: true
+    template: guides-for-teams/index
+    uriFormat: guides-for-teams
+type: single

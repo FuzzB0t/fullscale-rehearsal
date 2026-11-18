@@ -1,4 +1,4 @@
-dateModified: 1795032521
+dateModified: 1795032850
 email:
   fromEmail: admin@fullscale-rehearsal.test
   fromName: 'FullScale Rehearsal'
@@ -18,12 +18,21 @@ meta:
     3c455506-7347-4211-af39-afd8a80fe4f5: 'Chapter body' # Chapter body
     5bf4077a-9ec9-4f09-b54a-39f4b9f150ec: 'Guide tagline' # Guide tagline
     5dd15697-d1e4-473f-b7a4-b494f0567d9f: 'Chapter subtitle' # Chapter subtitle
+    9c665409-894b-48ce-b258-3b9b3190b5d1: Chapter # Chapter
     20bdc05a-c1c9-44f7-aec0-1a45ec8bddca: 'Chapter video URL' # Chapter video URL
     81b3e52a-b5d9-4e8c-862a-d08e4b0318af: 'Guide icon' # Guide icon
     85bd5664-af6b-469d-9a5d-5b6f5d49fd9f: 'Chapter hero image' # Chapter hero image
+    695ac37a-78d3-4ab4-b891-23e960401318: 'Index page' # Index page
     972ddd4a-1192-4fc3-91ff-de4662a2e163: 'Guide NEW badge' # Guide NEW badge
+    3884b563-a7ad-4efb-bd11-bbd74f9d420b: 'Guides for Teams' # Guides for Teams
+    5913bf48-532f-4dce-ac17-bf13dd8ff9e7: 'Artifact card' # Artifact card
+    901998a6-2f25-4bb4-acea-b4f03387be46: 'Resource cards' # Resource cards
     ac389a65-ba63-47f2-94a8-09367f55e483: 'Card description' # Card description
+    bf6c8fc5-6f90-46e4-ac94-1e51f222073a: 'Strategy card' # Strategy card
+    c280f3a1-80e9-4671-b0b7-e4e297a3d1d3: Guide # Guide
     cdbd4cd8-6694-45b4-a535-1e3d1553016d: 'Card link' # Card link
+    d26df13b-ff5c-401c-b5ed-07c1ace2f2ec: 'Activity card' # Activity card
+    de0fab2d-d72a-4a08-9832-77d81fde8796: 'Guides for Teams index' # Guides for Teams index
     f35b4774-540c-4743-9e0f-faba6c2d2b99: 'FullScale Rehearsal' # FullScale Rehearsal
 plugins:
   ckeditor:

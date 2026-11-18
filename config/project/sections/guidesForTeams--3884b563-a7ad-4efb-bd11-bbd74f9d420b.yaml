@@ -1,0 +1,27 @@
+defaultPlacement: end
+enableVersioning: true
+entryTypes:
+  -
+    uid: c280f3a1-80e9-4671-b0b7-e4e297a3d1d3 # Guide
+  -
+    uid: 9c665409-894b-48ce-b258-3b9b3190b5d1 # Chapter
+handle: guidesForTeams
+maxAuthors: 1
+minAuthors: 1
+name: 'Guides for Teams'
+previewTargets:
+  -
+    label: 'Primary entry page'
+    refresh: '1'
+    urlFormat: '{url}'
+propagationMethod: all
+siteSettings:
+  f35b4774-540c-4743-9e0f-faba6c2d2b99: # FullScale Rehearsal
+    enabledByDefault: true
+    hasUrls: true
+    template: guides-for-teams/_entry
+    uriFormat: "{parent.uri ?? 'guides-for-teams'}/{slug}"
+structure:
+  maxLevels: 2
+  uid: c785bf37-15aa-4629-b298-bb6e6aaca2dc
+type: structure

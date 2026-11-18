@@ -53,3 +53,18 @@ export async function setSwitch(locator, on) {
   const cur = (await locator.getAttribute('aria-checked')) === 'true';
   if (cur !== on) await locator.click();
 }
+
+/**
+ * Add existing fields to the first tab of an open field-layout designer.
+ * The picker stays open after each click, so open it once, click every field, then close it.
+ */
+export async function addFieldsToLayout(page, handles) {
+  await page.locator('.fld-tab button:text-is("Add")').first().click();
+  await page.waitForTimeout(500);
+  for (const handle of handles) {
+    await page.getByText(handle, { exact: true }).first().click();
+    await page.waitForTimeout(500);
+  }
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(400);
+}
