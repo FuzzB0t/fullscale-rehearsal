@@ -37,3 +37,7 @@ Thumbs.db
 
 # Uploaded assets are content, not code
 /web/uploads/
+
+# OAuth signing keys written by `craft oauth/generate-keys`. The private key must never be committed.
+/storage/oauth-*.key
+*.pem

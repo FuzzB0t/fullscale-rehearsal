@@ -54,3 +54,12 @@ The per-task split is approximate.
 | **3b** two test users, 54-check permission matrix, sign-in checks in the control panel | ~2 min | **Applies on day one**, about 10 min. |
 | **3b** apply guide + NOTES | ~1 min | |
 | **3b total** | **~6 min** | 2026-11-18, 16:51 to 16:56 (machine clock). |
+
+| Task | Time | Day-one relevance |
+|---|---|---|
+| **3c** read Craft's MCP, OAuth and settings code; OAuth keys; .gitignore fix | ~3 min | Reusable: the guide holds the answers. The `.gitignore` fix is **day-one critical**. |
+| **3c** MCP settings through the control panel | ~1 min | **Applies on day one**, about 5 min by hand. |
+| **3c** OAuth + MCP test harness, access-level test at two levels, reconnect check (including one debugging detour: consent is remembered) | ~6 min | **Applies on day one**, about 15 min; the harness is reusable in Step 5. |
+| **3c** apply guide + NOTES | ~3 min | |
+| **3c total** | **~13 min** | 2026-11-18, 16:57 to 17:04 (machine clock). |
+| **Step 3 total (3a + 3b + 3c)** | **~34 min** | Replica numbers; day one is quicker for fields, groups and settings and slower for templates. |

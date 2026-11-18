@@ -1,4 +1,4 @@
-dateModified: 1795042387
+dateModified: 1795042735
 email:
   fromEmail: admin@fullscale-rehearsal.test
   fromName: 'FullScale Rehearsal'
@@ -11,6 +11,15 @@ fs:
       path: '@webroot/uploads/guides'
     type: craft\fs\Local
     url: '@web/uploads/guides'
+mcp:
+  authorizationRoute: /admin/mcp/auth
+  enabled: true
+  publicAllowDrafts: false
+  publicAllowInactive: false
+  publicAllowRevisions: false
+  publicEnabled: false
+  publicRoute: /mcp
+  route: /admin/mcp
 meta:
   __names__:
     2d01bfac-7f3a-4c15-9a6f-0ccb37f7d03e: 'FullScale Rehearsal' # FullScale Rehearsal
