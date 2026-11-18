@@ -1,0 +1,34 @@
+/.env
+/.idea
+/vendor
+.DS_Store
+
+# --- FullScale rehearsal additions ---
+# Environment files: only the .env.example* templates are committed
+/.env
+/.env.*
+!/.env.example*
+# Local-only credentials and client material (never commit)
+/.local/
+/client-import/
+# Database dumps and archives
+*.sql
+*.sql.gz
+*.dump
+*.zip
+/storage/backups/
+# Craft runtime and generated files
+/web/cpresources/
+# Node / Playwright
+/node_modules/
+/test-results/
+/playwright-report/
+/.playwright-browsers/
+# Claude Code local settings (the shared settings.json IS committed)
+/.claude/settings.local.json
+# OS / editor
+Thumbs.db
+# DDEV generates this (default throwaway DB credentials); never commit .env files
+/.ddev/.env*
+# The task brief from the client engagement, not part of the deliverable
+/fullscale-demo-prompt.md

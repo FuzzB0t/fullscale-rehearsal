@@ -1,0 +1,7 @@
+# Keep LF everywhere: the project runs in Linux containers and on a Linux-hosted production site.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
