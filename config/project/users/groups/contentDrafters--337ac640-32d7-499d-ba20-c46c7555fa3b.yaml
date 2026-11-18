@@ -1,0 +1,10 @@
+description: 'Can view Guides for Teams entries and upload images. Drafts only: cannot save, publish or delete entries.'
+handle: contentDrafters
+name: 'Content Drafters'
+permissions:
+  - accesscp
+  - 'saveassets:3aa2d703-7281-4ffd-9a8d-a328b15f832f' # Guide images
+  - 'viewassets:3aa2d703-7281-4ffd-9a8d-a328b15f832f' # Guide images
+  - 'viewentries:3884b563-a7ad-4efb-bd11-bbd74f9d420b' # Guides for Teams
+  - 'viewpeerassets:3aa2d703-7281-4ffd-9a8d-a328b15f832f' # Guide images
+  - 'viewpeerentries:3884b563-a7ad-4efb-bd11-bbd74f9d420b' # Guides for Teams

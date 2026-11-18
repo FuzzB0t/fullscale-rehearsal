@@ -1,0 +1,18 @@
+description: 'Everything Content Drafters can do, plus create, save, apply drafts and delete Guides for Teams entries.'
+handle: publishers
+name: Publishers
+permissions:
+  - accesscp
+  - 'createentries:3884b563-a7ad-4efb-bd11-bbd74f9d420b' # Guides for Teams
+  - 'deleteentries:3884b563-a7ad-4efb-bd11-bbd74f9d420b' # Guides for Teams
+  - 'deletepeerentries:3884b563-a7ad-4efb-bd11-bbd74f9d420b' # Guides for Teams
+  - 'deletepeerentrydrafts:3884b563-a7ad-4efb-bd11-bbd74f9d420b' # Guides for Teams
+  - 'saveassets:3aa2d703-7281-4ffd-9a8d-a328b15f832f' # Guide images
+  - 'saveentries:3884b563-a7ad-4efb-bd11-bbd74f9d420b' # Guides for Teams
+  - 'savepeerentries:3884b563-a7ad-4efb-bd11-bbd74f9d420b' # Guides for Teams
+  - 'savepeerentrydrafts:3884b563-a7ad-4efb-bd11-bbd74f9d420b' # Guides for Teams
+  - 'viewassets:3aa2d703-7281-4ffd-9a8d-a328b15f832f' # Guide images
+  - 'viewentries:3884b563-a7ad-4efb-bd11-bbd74f9d420b' # Guides for Teams
+  - 'viewpeerassets:3aa2d703-7281-4ffd-9a8d-a328b15f832f' # Guide images
+  - 'viewpeerentries:3884b563-a7ad-4efb-bd11-bbd74f9d420b' # Guides for Teams
+  - 'viewpeerentrydrafts:3884b563-a7ad-4efb-bd11-bbd74f9d420b' # Guides for Teams
