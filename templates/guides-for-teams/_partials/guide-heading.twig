@@ -1,12 +1,13 @@
-{# REPLICA (throwaway): guide title as H1 with tagline, icon and the chapter menu. #}
+{# REPLICA (throwaway): guide title with tagline, icon and the chapter menu.
+   Optional variables (portable change 3a, layout fields). Leave them out to get today's layout:
+     headingTag  'h1' (default) or 'p'. Use 'p' when the chapter title is the page's H1.
+     stickyMenu  false (default) or true. true pins the chapter menu while scrolling. #}
 {% set icon = guide.guideIcon.one() %}
-<header class="guide-heading">
-  <h1 class="guide-heading__title">{{ guide.title }}</h1>
-  {% if guide.guideTagline %}<p class="guide-heading__tagline">{{ guide.guideTagline }}</p>{% endif %}
-  {% if icon %}<img class="guide-heading__icon" src="{{ icon.url }}" alt="" width="96" height="96">{% endif %}
-
+{% set headingTag = headingTag|default('h1') %}
+{% set stickyMenu = stickyMenu|default(false) %}
+{% set menu %}
   {% if chapters|length %}
-    <nav class="chapter-menu" aria-label="Chapters in {{ guide.title }}">
+    <nav class="chapter-menu{{ stickyMenu ? ' chapter-menu--sticky' : '' }}" aria-label="Chapters in {{ guide.title }}">
       <ul class="chapter-menu__list">
         {% for chapter in chapters %}
           <li class="chapter-menu__item{{ current and chapter.id == current.id ? ' is-current' : '' }}">
@@ -17,4 +18,14 @@
       <span class="chapter-menu__toggle" aria-hidden="true">&#9776;</span>
     </nav>
   {% endif %}
+{% endset %}
+<header class="guide-heading{{ headingTag != 'h1' ? ' guide-heading--secondary' : '' }}">
+  <{{ headingTag }} class="guide-heading__title">{{ guide.title }}</{{ headingTag }}>
+  {% if guide.guideTagline %}<p class="guide-heading__tagline">{{ guide.guideTagline }}</p>{% endif %}
+  {% if icon %}<img class="guide-heading__icon" src="{{ icon.url }}" alt="" width="96" height="96">{% endif %}
+
+  {% if not stickyMenu %}{{ menu }}{% endif %}
 </header>
+{# A sticky element cannot leave its parent, and the header is only as tall as its own content,
+   so a sticky menu is rendered after the header, directly inside the (tall) chapter article. #}
+{% if stickyMenu %}{{ menu }}{% endif %}

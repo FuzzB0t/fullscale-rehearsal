@@ -1,10 +1,24 @@
-{# REPLICA (throwaway): chapter page. Order, top to bottom:
+{# REPLICA (throwaway): chapter page. Order, top to bottom (default layout):
    GUIDES bar > guide title (H1) + tagline + icon + chapter menu > "In this section" >
-   chapter title (H2) + subtitle > video or hero > body > resource cards > explore / continue. #}
+   chapter title (H2) + subtitle > video or hero > body > resource cards > explore / continue.
+
+   LAYOUT OPTIONS (portable change 3a). Three fields on the guide change this page, see docs/apply/3a-layout-fields.md:
+     layoutHeadline       'chapterFirst' puts the chapter title (as H1) above the guide title (which becomes a label).
+     layoutStickyMenu     true pins the chapter menu to the top of the screen while scrolling.
+     layoutShowInSection  false hides the "In this section" list.
+   Empty or missing values mean today's layout. #}
 {% extends '_layout' %}
 
 {% set guide = entry.parent ?? entry %}
 {% set pageTitle = entry.title ~ ' - ' ~ guide.title %}
+
+{# Layout options, read from the parent guide. Defaults reproduce today's layout:
+   - A dropdown's default is NOT applied to guides saved before the field existed (its value is null), so an
+     empty value must mean 'guideFirst'. Anything other than 'chapterFirst' also falls back to today's layout.
+   - Lightswitch defaults ARE applied to old entries (checked), and `??` covers a guide type without the fields. #}
+{% set chapterFirst = (guide.layoutHeadline.value|default('guideFirst')) == 'chapterFirst' %}
+{% set stickyMenu = (guide.layoutStickyMenu ?? false) ? true : false %}
+{% set showInSection = (guide.layoutShowInSection ?? true) ? true : false %}
 
 {# Split the body at each <h3> so we can give every section heading an anchor and list them in "In this section". #}
 {% set bodyHtml = entry.chapterBody ? (entry.chapterBody ~ '') : '' %}
@@ -18,15 +32,31 @@
 {% endfor %}
 
 {% block content %}
+  {# The chapter title is the H2 under the guide title, or the page's H1 when the chapter comes first. #}
+  {% set chapterTag = chapterFirst ? 'h1' : 'h2' %}
+  {% set chapterTitleBlock %}
+    <{{ chapterTag }} class="chapter__title{{ chapterFirst ? ' chapter__title--lead' : '' }}">{{ entry.title }}</{{ chapterTag }}>
+    {% if entry.chapterSubtitle %}<p class="chapter__subtitle">{{ entry.chapterSubtitle }}</p>{% endif %}
+  {% endset %}
+
   <div class="guide-bar"><a class="guide-bar__link" href="{{ siteUrl('guides-for-teams') }}">GUIDES</a></div>
 
   <article class="page chapter">
-    {% include 'guides-for-teams/_partials/guide-heading' with { guide: guide, current: entry, chapters: guide.getChildren().all() } only %}
+    {% if chapterFirst %}{{ chapterTitleBlock }}{% endif %}
 
-    {% include 'guides-for-teams/_partials/in-this-section' with { sections: sections } only %}
+    {% include 'guides-for-teams/_partials/guide-heading' with {
+      guide: guide,
+      current: entry,
+      chapters: guide.getChildren().all(),
+      headingTag: chapterFirst ? 'p' : 'h1',
+      stickyMenu: stickyMenu,
+    } only %}
 
-    <h2 class="chapter__title">{{ entry.title }}</h2>
-    {% if entry.chapterSubtitle %}<p class="chapter__subtitle">{{ entry.chapterSubtitle }}</p>{% endif %}
+    {% if showInSection %}
+      {% include 'guides-for-teams/_partials/in-this-section' with { sections: sections } only %}
+    {% endif %}
+
+    {% if not chapterFirst %}{{ chapterTitleBlock }}{% endif %}
 
     {% include 'guides-for-teams/_partials/chapter-media' with { entry: entry } only %}
 

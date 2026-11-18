@@ -32,3 +32,17 @@ Active figures are rough: measured command times plus diagnosis time.
 | CKEditor toolbar drag attempts (3, abandoned) | ~10 min | Lists must be added by hand in the control panel. |
 | Templates, CSS, fixture seeder, render checks | ~20 min | Template structure is reusable; fixture seeder is reused by CI in Step 6. |
 | **Step 2 total (active)** | **~75 min** | Started 2026-11-18 ~13:45, finished 14:20. |
+
+## Step 3: Portable changes
+
+Times from the machine clock (start of the step to its last file edit), so they include waiting for page loads and scripted runs.
+The per-task split is approximate.
+
+| Task | Time | Day-one relevance |
+|---|---|---|
+| **3a** before captures (HTML + screenshots) | ~2 min | Repeat on their real pages before touching anything. |
+| **3a** three fields + entry type layout through the control panel (scripted, plus a curly-quote fix) | ~4 min | **Applies on day one**, about 10 min by hand (Method A in the apply guide). |
+| **3a** templates and CSS | ~3 min | Pattern only. Their markup differs, so allow longer. |
+| **3a** verification: default identity, 8-combination matrix, sticky scroll check, old-entry and field-less check | ~5 min | **Applies on day one**, about 15 min by hand. |
+| **3a** apply guide + NOTES | ~1 min of the clock, written alongside | |
+| **3a total** | **~15 min** | 2026-11-18, 16:13 to 16:28. |

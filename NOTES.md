@@ -62,7 +62,28 @@ PHP 8.3 was chosen inside Craft 5's supported range; FullScale's real PHP versio
 - **PowerShell 5.1 and quotes.** It strips double quotes when passing arguments to native programs. Put PHP in single quotes when calling `ddev craft exec`, or call it from Git Bash.
 - **PowerShell 5.1 and BOMs.** `Set-Content -Encoding utf8` adds a byte-order mark. Use the editor tools or Git Bash for files that git or YAML will read.
 - **Craft ships agent skills in `vendor/craftcms/cms/.agents/skills/`** (`translations`, `twig-upgrade`). Not for staff; review in Step 6.
-- **Control-panel automation.** The CKEditor toolbar designer is drag-and-drop and could not be driven by synthetic mouse events (three attempts). Everything else (fields, entry types, Matrix, sections) works through Playwright.
+- **Control-panel automation.** The CKEditor toolbar designer is drag-and-drop and could not be driven by synthetic mouse events (three attempts). Everything else (fields, entry types, Matrix, sections) works through Playwright. Extra details from 3a: Dropdown options are an editable table (the "default" tick is a `<label>` over the input, so click the label); entry edit screens render dropdowns with Selectize (click `.selectize-input`, then the option); control-panel entry URLs use the section **handle** (`/admin/entries/guidesForTeams`).
+- **`ddev` may not be on PATH** in a fresh shell here. It is at `C:\Users\ultim\AppData\Local\Programs\DDEV`; add that folder to PATH for the session.
+- **`curl` against the local site** needs `--ssl-no-revoke` (Windows schannel can't check revocation for mkcert certificates). The certificate chain is still verified.
+- **Admin session expires.** If a control-panel script can't find a form, run `node scripts/cp-login.mjs` again.
+
+## Portable changes (reapplied on the real site)
+
+Each lives on its own branch, merged to `main`, with an apply guide in `docs/apply/`.
+
+| Change | Branch | Status | Apply guide |
+|---|---|---|---|
+| 3a Layout fields: `layoutHeadline`, `layoutStickyMenu`, `layoutShowInSection` on the guide entry type | `portable/layout-fields` | Done. Defaults reproduce today's layout exactly (HTML and screenshots identical); 8 of 8 option combinations pass; sticky verified by scrolling. | [docs/apply/3a-layout-fields.md](docs/apply/3a-layout-fields.md) |
+| 3b User groups: Content Drafters, Publishers | `portable/user-groups` | Not started | |
+| 3c MCP settings | `portable/mcp-settings` | Not started | |
+
+Findings from 3a that matter on day one:
+
+- **A Dropdown's default is not applied to entries saved before the field existed** (value is `null`); Lightswitch defaults are. Templates must treat an empty dropdown as the default.
+- **Sticky menus need a tall parent.** A sticky element cannot leave its parent container.
+- **Every new field touches `project.yaml`** (`dateModified` and a `meta.__names__` line), so expect merge conflicts there. `craft project-config/touch` resolves the `dateModified` one.
+- **Whitespace-only HTML differences are expected** when a template uses Twig `{% set %}` capture. Compare with whitespace around tags normalised, plus screenshots.
+- Keep YAML ASCII. Curly quotes typed into field names or instructions land as non-ASCII in project config. Fixed here by editing the fields through the control panel.
 
 ## REPLICA (throwaway): guide content model and templates
 

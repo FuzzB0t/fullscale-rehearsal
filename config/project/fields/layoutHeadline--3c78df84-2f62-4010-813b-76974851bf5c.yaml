@@ -1,0 +1,47 @@
+columnSuffix: null
+handle: layoutHeadline
+instructions: "Which title leads on this guide's chapter pages: the guide title (as today) or the chapter title."
+name: 'Headline layout'
+searchable: false
+settings:
+  customOptions: false
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - 'Guide title first'
+        -
+          - value
+          - guideFirst
+        -
+          - icon
+          - ''
+        -
+          - color
+          - ''
+        -
+          - default
+          - '1'
+    -
+      __assoc__:
+        -
+          - label
+          - 'Chapter title first'
+        -
+          - value
+          - chapterFirst
+        -
+          - icon
+          - ''
+        -
+          - color
+          - ''
+        -
+          - default
+          - ''
+tip: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown
+warning: null
