@@ -1,4 +1,4 @@
-dateModified: 1795032850
+dateModified: 1795040481
 email:
   fromEmail: admin@fullscale-rehearsal.test
   fromName: 'FullScale Rehearsal'
@@ -15,13 +15,16 @@ meta:
   __names__:
     2d01bfac-7f3a-4c15-9a6f-0ccb37f7d03e: 'FullScale Rehearsal' # FullScale Rehearsal
     3aa2d703-7281-4ffd-9a8d-a328b15f832f: 'Guide images' # Guide images
+    3c78df84-2f62-4010-813b-76974851bf5c: 'Headline layout' # Headline layout
     3c455506-7347-4211-af39-afd8a80fe4f5: 'Chapter body' # Chapter body
     5bf4077a-9ec9-4f09-b54a-39f4b9f150ec: 'Guide tagline' # Guide tagline
     5dd15697-d1e4-473f-b7a4-b494f0567d9f: 'Chapter subtitle' # Chapter subtitle
     9c665409-894b-48ce-b258-3b9b3190b5d1: Chapter # Chapter
     20bdc05a-c1c9-44f7-aec0-1a45ec8bddca: 'Chapter video URL' # Chapter video URL
+    41b7e098-218d-4e25-8aea-0b3d2cb654e5: 'Sticky chapter menu' # Sticky chapter menu
     81b3e52a-b5d9-4e8c-862a-d08e4b0318af: 'Guide icon' # Guide icon
     85bd5664-af6b-469d-9a5d-5b6f5d49fd9f: 'Chapter hero image' # Chapter hero image
+    91f003fa-5a55-4b58-9e3e-5bff808f44d4: "Show 'In this section'" # Show 'In this section'
     695ac37a-78d3-4ab4-b891-23e960401318: 'Index page' # Index page
     972ddd4a-1192-4fc3-91ff-de4662a2e163: 'Guide NEW badge' # Guide NEW badge
     3884b563-a7ad-4efb-bd11-bbd74f9d420b: 'Guides for Teams' # Guides for Teams

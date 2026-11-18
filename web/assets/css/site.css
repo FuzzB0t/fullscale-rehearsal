@@ -81,3 +81,10 @@ img { max-width: 100%; height: auto; }
   .chapter-menu__toggle { display: inline; }
   .page__title, .guide-heading__title { font-size: 1.8rem; }
 }
+
+/* Layout options (portable change 3a): driven by the layoutHeadline / layoutStickyMenu fields on the guide.
+   None of these classes appear in the default layout. */
+.chapter-menu--sticky { position: sticky; top: 0; z-index: 10; background: var(--bg); }
+.guide-heading--secondary .guide-heading__title { font-size: 1.1rem; font-weight: 700; margin: 0 0 4px; }
+.chapter__title--lead { font-size: 2.2rem; margin-top: 24px; }
+@media (max-width: 640px) { .chapter__title--lead { font-size: 1.8rem; } }

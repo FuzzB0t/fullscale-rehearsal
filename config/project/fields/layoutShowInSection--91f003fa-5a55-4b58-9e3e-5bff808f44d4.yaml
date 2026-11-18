@@ -1,0 +1,15 @@
+columnSuffix: null
+handle: layoutShowInSection
+instructions: 'Show the "In this section" list of links at the top of each chapter page.'
+name: "Show 'In this section'"
+searchable: false
+settings:
+  default: true
+  offLabel: null
+  onLabel: null
+  showLabelsInCards: false
+tip: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch
+warning: null
