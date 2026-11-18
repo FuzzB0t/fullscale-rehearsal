@@ -1,0 +1,13 @@
+{
+  "name": "fullscale-rehearsal",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Local rehearsal tooling (screenshots, render checks). Craft itself is installed via Composer.",
+  "scripts": {
+    "pw:install": "playwright install chromium",
+    "pw:test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1"
+  }
+}

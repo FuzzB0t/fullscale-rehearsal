@@ -32,3 +32,5 @@ Thumbs.db
 /.ddev/.env*
 # The task brief from the client engagement, not part of the deliverable
 /fullscale-demo-prompt.md
+# Craft license key: local trial key for this sandbox, the real site has its own
+/config/license.key
