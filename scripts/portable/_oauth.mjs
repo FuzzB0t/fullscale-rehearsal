@@ -12,6 +12,7 @@
 // and reused from .local/oauth-client.json.
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -73,6 +74,49 @@ export async function exchangeCode(client, code, verifier) {
   const body = await res.json();
   if (!res.ok || !body.access_token) throw new Error(`Token exchange failed: ${res.status} ${JSON.stringify(body)}`);
   return body;
+}
+
+/**
+ * Sign in as a real Craft user (a saved control-panel session) and approve one access level on the consent
+ * screen, like a person connecting an MCP client. Listens on the redirect address to catch the callback, then
+ * exchanges the code (PKCE). Returns the token response.
+ *   stateFile: Playwright session file from scripts/cp-login.mjs    level: 'mcp:read' | 'mcp:write'
+ *   shot: optional file name (under docs/screenshots/<shotDir>) for a picture of the consent screen
+ */
+export async function getToken({ client, stateFile, level, shot, shotDir = '3c' }) {
+  const { chromium } = await import('@playwright/test');
+  const { verifier, challenge } = pkce();
+  const state = `t-${Math.random().toString(36).slice(2)}`;
+  const browser = await chromium.launch();
+  let listener;
+  try {
+    const page = await (await browser.newContext({ viewport: { width: 1000, height: 800 }, storageState: stateFile })).newPage();
+    page.setDefaultTimeout(20000);
+    let redirected = null;
+    listener = http.createServer((req, res) => { redirected = `http://127.0.0.1:8765${req.url}`; res.end('You can close this window.'); });
+    await new Promise((resolve) => listener.listen(8765, '127.0.0.1', resolve));
+    await page.goto(authorizeUrl(client, { challenge, scope: 'mcp:read mcp:write mcp:admin', state }), { waitUntil: 'networkidle' });
+    const radio = page.locator(`input[type=radio][name=access][value="${level}"]`);
+    if ((await radio.count()) !== 1) throw new Error(`Access level ${level} is not offered to this user`);
+    const id = await radio.getAttribute('id');
+    await (id ? page.locator(`label[for="${id}"]`) : radio).click();
+    if (shot) {
+      const dir = path.join(root, 'docs', 'screenshots', shotDir);
+      fs.mkdirSync(dir, { recursive: true });
+      await page.screenshot({ path: path.join(dir, shot) });
+    }
+    await page.getByRole('button', { name: 'Authorize', exact: true }).click();
+    await page.waitForTimeout(1500);
+    if (!redirected) throw new Error('Consent did not redirect back to the client');
+    const u = new URL(redirected);
+    if (u.searchParams.get('state') !== state) throw new Error('OAuth state mismatch');
+    const code = u.searchParams.get('code');
+    if (!code) throw new Error(`No code in redirect: ${redirected}`);
+    return await exchangeCode(client, code, verifier);
+  } finally {
+    listener?.close();
+    await browser.close();
+  }
 }
 
 /** A minimal MCP client over Streamable HTTP. Responses may be JSON or a single SSE event. */

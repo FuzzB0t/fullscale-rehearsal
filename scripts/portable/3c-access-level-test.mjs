@@ -8,47 +8,16 @@
 //
 //   NODE_EXTRA_CA_CERTS=C:\Users\ultim\AppData\Local\mkcert\rootCA.pem node scripts/portable/3c-access-level-test.mjs [state.json] [label]
 //
-// Uses the fake drafter (maya.okafor) and the fixture guide. Reuses one OAuth client (.local/oauth-client.json).
+// Uses the fake drafter (maya.okafor) and the fixture guide (slug fixture-guide), so seed it first:
+//   ddev craft exec "(function(){ $mode='seed'; return require '/var/www/html/scripts/seed-fixtures.php'; })()"
+// and remove it afterwards (mode 'remove'). Reuses one OAuth client (.local/oauth-client.json).
 import fs from 'node:fs';
-import http from 'node:http';
 import path from 'node:path';
-import { registerClientOnce, pkce, authorizeUrl, exchangeCode, McpSession, REDIRECT, root } from './_oauth.mjs';
-const { chromium } = await import('@playwright/test');
+import { registerClientOnce, getToken, McpSession, root } from './_oauth.mjs';
 
 const stateFile = path.resolve(root, process.argv[2] ?? '.local/drafter-state.json');
 const who = process.argv[3] ?? 'drafter';
 const client = await registerClientOnce();
-
-/** Sign in (saved session) and approve one access level. Returns the token response. */
-async function tokenFor(level, shot) {
-  const { verifier, challenge } = pkce();
-  const state = `t-${Math.random().toString(36).slice(2)}`;
-  const browser = await chromium.launch();
-  try {
-    const page = await (await browser.newContext({ viewport: { width: 1000, height: 800 }, storageState: stateFile })).newPage();
-    page.setDefaultTimeout(20000);
-    // Like a real MCP client, listen on the redirect address and catch the callback.
-    let redirected = null;
-    const listener = http.createServer((req, res) => { redirected = `http://127.0.0.1:8765${req.url}`; res.end('You can close this window.'); });
-    await new Promise((resolve) => listener.listen(8765, '127.0.0.1', resolve));
-    page.on('close', () => listener.close());
-    await page.goto(authorizeUrl(client, { challenge, scope: 'mcp:read mcp:write mcp:admin', state }), { waitUntil: 'networkidle' });
-    const radio = page.locator(`input[type=radio][name=access][value="${level}"]`);
-    if ((await radio.count()) !== 1) throw new Error(`Access level ${level} is not offered to this user`);
-    const id = await radio.getAttribute('id');
-    await (id ? page.locator(`label[for="${id}"]`) : radio).click();
-    if (shot) await page.screenshot({ path: path.join(root, 'docs', 'screenshots', '3c', shot) });
-    await page.getByRole('button', { name: 'Authorize', exact: true }).click();
-    await page.waitForTimeout(1500);
-    listener.close();
-    if (!redirected) throw new Error('Consent did not redirect back to the client');
-    const u = new URL(redirected);
-    if (u.searchParams.get('state') !== state) throw new Error('OAuth state mismatch');
-    const code = u.searchParams.get('code');
-    if (!code) throw new Error(`No code in redirect: ${redirected}`);
-    return await exchangeCode(client, code, verifier);
-  } finally { await browser.close(); }
-}
 
 const short = (r) => {
   if (r.json?.error) return `ERROR ${r.json.error.code}: ${r.json.error.message}`;
@@ -62,7 +31,7 @@ const payload = (r) => { try { return JSON.parse(r.json.result.content[0].text);
 const report = {};
 for (const level of ['mcp:read', 'mcp:write']) {
   const out = { level, steps: [] };
-  const tok = await tokenFor(level, `consent-${who}-${level.replace(':', '-')}.png`);
+  const tok = await getToken({ client, stateFile, level, shot: `consent-${who}-${level.replace(':', '-')}.png` });
   out.grantedScope = tok.scope ?? '(not returned)';
   const s = new McpSession(tok.access_token);
   const init = await s.init();
