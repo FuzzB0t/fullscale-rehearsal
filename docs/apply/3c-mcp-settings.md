@@ -80,6 +80,7 @@ On their dev or staging copy with `allowAdminChanges` on, never live. Only admin
 2. The two discovery documents must load as JSON: the protected-resource one from that header, and the authorization-server one (`/.well-known/oauth-authorization-server/admin/oauth/mcp`). Replica: both 200, with PKCE (`S256`) required and no client secret.
 3. Run `scripts/portable/3c-access-level-test.mjs` as a real drafter. It drives the consent screen, takes a token at each level, and prints the tool list and the call results above. Replica: matches the tables above.
 4. Confirm `git status` shows no key files.
+5. **Check with the real client before telling staff anything.** `claude mcp add --transport http craft https://<site>/admin/mcp/auth`, then `claude mcp list`. It must say **"! Needs authentication"** (the correct state before sign-in). Replica result: with `/admin/mcp` it said "Failed to connect — Protected resource ... does not match expected ...", and with `/admin/mcp/auth` it said "Needs authentication". If it fails on certificates instead, the site's certificate chain is the problem, not Craft.
 
 ## Staff instructions this produces (for Step 8)
 
@@ -97,8 +98,9 @@ On their dev or staging copy with `allowAdminChanges` on, never live. Only admin
 6. **Admins.** Admins are offered Full access (from the source; an admin consent screen was not run). For everyday content work they should choose Read and write too. The admin-only tools also need `allowAdminChanges`, which is off in production (to be shown in Step 5 case 14).
 7. **HTTPS and proxies.** The OAuth issuer and metadata URLs come from the site URL, and the replica's were correct over HTTPS. Behind a load balancer, CDN or tunnel, check that the URLs in the discovery documents show the public `https://` host.
 8. **Clients that Craft should trust.** `redirectDomains` defaults to `*` (any redirect domain may register). That setting can restrict it if FullScale wants only specific clients.
-9. **Local-only.** A Node-based client on this machine needs `NODE_EXTRA_CA_CERTS` pointing at the mkcert root CA (`C:\Users\ultim\AppData\Local\mkcert\rootCA.pem`), because Node does not use the Windows trust store. Production uses a normal public certificate.
-10. **Test leftovers.** One OAuth client (`rehearsal-access-level-test`) and its tokens exist in the local database. They are not in git or project config.
+9. **Local-only.** The Node test scripts on this machine need `NODE_EXTRA_CA_CERTS` pointing at the mkcert root CA (`C:\Users\ultim\AppData\Local\mkcert\rootCA.pem`), because Node does not use the Windows trust store. Claude Code's native client does not need it (it connected over HTTPS using the Windows store). Production uses a normal public certificate.
+10. **Give clients the authorization endpoint.** Tell staff to connect to `https://<site>/admin/mcp/auth` (the "Authorization Endpoint" on the settings page), not `/admin/mcp`. Craft advertises its OAuth resource as `/admin/mcp/auth`, and Claude Code refuses to connect to `/admin/mcp` because that URL does not sit under the advertised resource ("Protected resource ... does not match expected ..."). Connecting to `/admin/mcp/auth` reports "Needs authentication", which is correct. The command is `claude mcp add --transport http <name> https://<site>/admin/mcp/auth`. A custom `cpTrigger` changes the first path segment.
+11. **Test leftovers.** One OAuth client (`rehearsal-access-level-test`) and its tokens exist in the local database. They are not in git or project config.
 
 ## Roll back
 

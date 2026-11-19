@@ -55,7 +55,7 @@ PHP 8.3 was chosen inside Craft 5's supported range; FullScale's real PHP versio
 | 8 | **Mutagen "problems" label** in `ddev list`: it cannot create one symlink inside `vendor/craftcms/cms/.claude/skills` on Windows. Harmless. | Local only. Windows Developer Mode would silence it. |
 | 9 | **Windows line endings.** `.gitattributes` forces LF so branch switches don't rewrite files as CRLF. | Keep `.gitattributes` in the repo. |
 | 10 | **OAuth signing keys** live in `storage/oauth-*.key`, generated locally with `craft oauth/generate-keys` and git-ignored. | Generate on each real environment, or supply through `config/oauth.php`. They must persist across deploys and match on every server. Never commit them. |
-| 11 | **Node and the mkcert CA.** Node-based MCP clients need `NODE_EXTRA_CA_CERTS` locally. | Local only. Production has a public certificate. |
+| 11 | **Node and the mkcert CA.** My Node test scripts need `NODE_EXTRA_CA_CERTS` locally. The Claude Code client (native build 2.1.327) does not: it trusts the Windows certificate store and connected over HTTPS without the variable (verified). | Local only. Production has a public certificate. |
 
 ## Gotchas learned
 
@@ -103,7 +103,8 @@ Findings from 3c that matter on day one:
 - **"Read only" is pre-selected** on the consent screen, and Craft **remembers the approved level**: a reconnect skips the consent screen and reuses the highest level approved before (tested). Access tokens last 1 hour and refresh tokens 30 days. Staff must be told to choose Read and write.
 - **Read and write does not bypass permissions.** Drafter over HTTP: creates and edits their own draft, cannot apply it, cannot change or delete live content (messages above).
 - **OAuth signing keys are not covered by Craft's `storage/.gitignore`.** A plain `git add` would commit the private key. `.gitignore` now has `/storage/oauth-*.key` and `*.pem`. Day one: add that first, and check how their host persists `storage/` (or supply the keys through `config/oauth.php`).
-- **Node clients do not trust the Windows certificate store.** Local only: set `NODE_EXTRA_CA_CERTS` to `C:\Users\ultim\AppData\Local\mkcert\rootCA.pem` for any Node-based MCP client (the Claude Code CLI included). Verified with the test harness.
+- **Node scripts do not trust the Windows certificate store.** Local only: set `NODE_EXTRA_CA_CERTS` to `C:\Users\ultim\AppData\Local\mkcert\rootCA.pem` for the Node test scripts. **Claude Code itself does not need it** (checked in Step 5 prep: the native build reached the server over HTTPS with the variable unset). An earlier version of this note said the Claude Code CLI needed it, which was wrong.
+- **Give OAuth clients the authorization endpoint, `/admin/mcp/auth`, not `/admin/mcp`.** Craft advertises its OAuth protected resource as `/admin/mcp/auth`. Claude Code rejected `/admin/mcp` ("Protected resource ... does not match expected ...") but accepted `/admin/mcp/auth` ("Needs authentication"). This matches the settings page, which calls it the path "to give MCP clients that sign in with OAuth". My own test scripts worked on `/admin/mcp` only because they send a token directly.
 - **The endpoint follows `cpTrigger`** and needs `accessCp`. Craft says to treat a custom `cpTrigger` as sensitive.
 - **Test harness:** `scripts/portable/_oauth.mjs` is a small OAuth + PKCE + MCP client that drives the consent screen with Playwright, so tests can run over the real endpoint without a manual sign-in. It registers ONE OAuth client and reuses it (registration is limited to 10 per IP per hour). It does not replace the Claude Code tests in Step 5.
 
