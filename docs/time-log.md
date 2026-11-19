@@ -75,3 +75,12 @@ Times from the machine clock. The users were created in Step 3b and reused here.
 | Write the content script; create 2 guides and 9 chapters over MCP (22 calls); prove the re-run is safe | ~4 min | **Applies on day one** if sample guides are wanted on staging; real content comes from FullScale. |
 | Verify in Craft (structure, authors, cards) and over HTTP (12 pages); drafter new-guide test; docs | ~3 min | |
 | **Step 4 total** | **~15 min** | 2026-11-19, 14:25 to 14:32 (machine clock). |
+
+## Step 5: MCP rehearsal (preparation)
+
+| Task | Time | Day-one relevance |
+|---|---|---|
+| Switch to production mode; smoke-test pages, settings, MCP and publisher access there (sessions had to be re-created after the switch) | ~3 min | Production behaves as dev for all of this. |
+| Connect the real Claude Code client: found the endpoint URL problem (`/admin/mcp` rejected, `/admin/mcp/auth` accepted) and that it needs no CA variable | ~8 min | **Applies on day one**: give staff the `/auth` URL. Saves a support round. |
+| Hand-off file for the session that runs the 15 cases | ~3 min | |
+| **Preparation so far** | **~14 min** | 2026-11-19, ~14:36 to 14:37 (machine clock). The 15 cases themselves are not run yet. |
