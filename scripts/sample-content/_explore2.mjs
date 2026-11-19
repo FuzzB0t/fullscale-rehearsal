@@ -1,0 +1,10 @@
+import path from 'node:path';
+import { registerClientOnce, getToken, McpSession, root } from '../portable/_oauth.mjs';
+const client = await registerClientOnce();
+const tok = await getToken({ client, stateFile: path.join(root, '.local', 'publisher-state.json'), level: 'mcp:write' });
+const s = new McpSession(tok.access_token); await s.init();
+const j = (r) => { try { return JSON.parse(r.json.result.content[0].text); } catch { return r.json; } };
+const [sectionId, typeId] = process.argv.slice(2).map(Number);
+const fs = j(await s.call('elements_field_schema', { type: 'entry', context: { sectionId, typeId } }));
+const props = fs.schema?.properties ?? fs.properties ?? {};
+for (const [k, v] of Object.entries(props)) console.log(`\n## ${k}\n` + JSON.stringify(v, null, 1).slice(0, k === 'chapterResourceCards' ? 2600 : 600));

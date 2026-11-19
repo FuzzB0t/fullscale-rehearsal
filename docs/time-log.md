@@ -63,3 +63,15 @@ The per-task split is approximate.
 | **3c** apply guide + NOTES | ~3 min | |
 | **3c total** | **~13 min** | 2026-11-18, 16:57 to 17:04 (machine clock). |
 | **Step 3 total (3a + 3b + 3c)** | **~34 min** | Replica numbers; day one is quicker for fields, groups and settings and slower for templates. |
+
+## Step 4: Sample content and users
+
+Times from the machine clock. The users were created in Step 3b and reused here.
+
+| Task | Time | Day-one relevance |
+|---|---|---|
+| Restart after the overnight shutdown (Docker Desktop, DDEV drive-letter case) | ~3 min | Local only. |
+| Remove fixtures; move the sign-in into the shared OAuth helper; ask the server for its create and field schemas | ~5 min | The schema calls are worth repeating on day one before writing content. |
+| Write the content script; create 2 guides and 9 chapters over MCP (22 calls); prove the re-run is safe | ~4 min | **Applies on day one** if sample guides are wanted on staging; real content comes from FullScale. |
+| Verify in Craft (structure, authors, cards) and over HTTP (12 pages); drafter new-guide test; docs | ~3 min | |
+| **Step 4 total** | **~15 min** | 2026-11-19, 14:25 to 14:32 (machine clock). |

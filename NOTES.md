@@ -107,6 +107,30 @@ Findings from 3c that matter on day one:
 - **The endpoint follows `cpTrigger`** and needs `accessCp`. Craft says to treat a custom `cpTrigger` as sensitive.
 - **Test harness:** `scripts/portable/_oauth.mjs` is a small OAuth + PKCE + MCP client that drives the consent screen with Playwright, so tests can run over the real endpoint without a manual sign-in. It registers ONE OAuth client and reuses it (registration is limited to 10 per IP per hour). It does not replace the Claude Code tests in Step 5.
 
+## Sample content (Step 4)
+
+Created **through Craft's MCP server over HTTP + OAuth by the Publisher** (`daniel.reyes`), with no database writes and no console seeding. All 11 entries are authored by that user (checked in Craft).
+
+| Guide | Chapters (real titles) |
+|---|---|
+| **Digital Equity** (NEW badge on) | Introduction; Getting Started (3 resource cards); Digital Equity in the Classroom; Essential Conditions to Support Digital Equity (2 cards); Taking It Forward |
+| **Research and Measurement** | Introduction; Getting Started; Collect and Analyze Data (2 cards); Taking It Forward |
+
+- The chapter titles are real. **The text is short original sample wording** ("Sample text. ..."), not copied from the real site. Each chapter has 2 to 3 H3 headings so "In this section" has something to list.
+- Result: 12 pages (index plus 11) all return 200 with exactly one `<h1>`; the index shows the NEW badge once.
+- Recreate or extend: `scripts/sample-content/create-guides.mjs` (idempotent; `--check` creates nothing and fails if anything is missing). It makes 22 MCP calls for the 11 entries. Needs `.local/publisher-state.json` (`node scripts/cp-login.mjs --user=daniel.reyes --state=.local/publisher-state.json`) and `NODE_EXTRA_CA_CERTS`.
+- Real excerpts and icons would need FullScale's content and permission. Icons (assets) were not uploaded.
+
+Findings from Step 4:
+
+- **A drafter cannot propose a new guide**, tested over MCP: a live `elements_create` and one with `asUnpublishedDraft` are both refused ("You are not authorized to save this entry."). Needs `createEntries`; the effect of granting it is untested.
+- **The MCP server shows the layout fields.** A guide returned by the server includes `layoutHeadline`, `layoutStickyMenu` and `layoutShowInSection`, so Step 5's layout case has them to work with.
+- **`elements_list` has no parent or descendant criterion.** The accepted criteria are `id, uid, site, siteId, status, search, trashed, relatedTo, with, archived, orderBy, offset, limit, slug, section, sectionId, type, typeId, authorId`. Telling a chapter from a guide means checking `parentId`, `level` or `uri` on the results.
+- **Writing a Matrix field over MCP:** `{ "entries": [ { "<entryTypeHandle>": { "id": "new:<key>", "title": ..., <fields> } } ] }`. A Link field is `{ "type": "url", "value": "..." }`. A rich-text body is an HTML string.
+- **Create and list results omit some fields.** The returned chapter lists `chapterSubtitle`, `chapterHeroImage` and `chapterBody` but not `chapterVideoUrl` or the resource cards. The cards were saved (checked in Craft), so don't judge success from the response alone.
+- **Empty `{}` is read as an array by the schema check.** Omit an empty `fields` argument instead of sending `{}`.
+- **After a restart:** Docker Desktop is not running (start it first). `ddev start` must be run from `D:\code\craft-demo` with an **uppercase** drive letter, for example `Set-Location D:\code\craft-demo` in PowerShell. From Git Bash, `cd /d/code/craft-demo` gives `d:` and DDEV refuses ("project root is already set to D:\code\craft-demo"). Other `ddev` commands tolerated it. The OAuth keys, site and MCP endpoint all came back working.
+
 ## REPLICA (throwaway): guide content model and templates
 
 Replaced by FullScale's real setup on day one. Built through the control panel (Playwright scripts in `scripts/rehearsal/`).
@@ -118,7 +142,7 @@ Replaced by FullScale's real setup on day one. Built through the control panel (
 - Templates: `templates/_layout.twig`, `templates/guides-for-teams/` (`index`, `_entry`, `_guide`, `_chapter`, and `_partials/`), CSS in `web/assets/css/site.css`.
 - **Limitation:** the body field keeps CKEditor's default toolbar (Heading, Bold, Italic, Link). To add bulleted and numbered lists, drag them into the toolbar in Settings > Fields > Chapter body.
 - Real structure facts seen on the public pages: 6 guides on the index (Research and Measurement, Data Advocacy, EdTech Systems Guide, Digital Equity, Hop Skip Leapfrog, Real-Time Redesign); Digital Equity has 5 chapters, Research and Measurement has 4. The R&M guide is served under `/guides/...` while its last chapter is under `/guides-for-teams/...`. The page shows "In this section" twice (probably desktop and mobile variants); the replica renders it once.
-- Fixture entries (`fixture-*` slugs, via `scripts/seed-fixtures.php`) exist for template checks and are deleted before Step 4.
+- Fixture entries (`fixture-*` slugs, via `scripts/seed-fixtures.php`) were used for the Step 3 checks and **removed at the start of Step 4**. Re-seed them (mode `seed`) when a test needs them, such as the 3c access-level test or CI in Step 6.
 
 ## Open questions for Honcho and FullScale
 
@@ -129,7 +153,7 @@ Replaced by FullScale's real setup on day one. Built through the control panel (
 - Their rich-text field and its toolbar configuration (lists, headings, links).
 - Why the guides live under both `/guides/` and `/guides-for-teams/` on the real site.
 - Whether the guide-title and chapter-menu layout is sticky on the real site (the fetch could not tell).
-- Should staff drafters be able to propose brand-new guides, or only edit existing ones? (Needs `createEntries`, and a test of what that allows.)
+- Should staff drafters be able to propose brand-new guides, or only edit existing ones? (Today they cannot, tested. It needs `createEntries`, and what that allows is untested.)
 - Should staff be able to edit the "Guides for Teams" index page? (A separate single section; nobody has access in the replica.)
 - Do they already have user groups that grant access to Guides for Teams? (Permissions add up across groups.)
 - How does their host handle `storage/` across deploys and servers? (OAuth signing keys must persist and match, or be supplied through `config/oauth.php`.)
