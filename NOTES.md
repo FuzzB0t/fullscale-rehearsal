@@ -15,7 +15,8 @@ Run from `d:\code\craft-demo` in PowerShell. Docker Desktop must be running firs
 
 | Task | Command |
 |---|---|
-| Start | `ddev start` (site: https://fullscale-rehearsal.ddev.site, CP: `/admin`) |
+| Start from cold | `./scripts/start-site.ps1` (starts Docker Desktop if needed, runs `ddev start` from the right path, waits until the site and the MCP endpoint answer). **Use this after every restart.** An MCP sign-in that says `ECONNREFUSED` means the site is down. |
+| Start (already warm) | `ddev start` from `D:\code\craft-demo` with an uppercase drive letter (site: https://fullscale-rehearsal.ddev.site, CP: `/admin`) |
 | Stop | `ddev stop` (keeps data); `ddev poweroff` stops all DDEV projects |
 | Craft CLI | `ddev craft <command>` (check `ddev craft help <command>` first) |
 | Switch environment | `./scripts/use-env.ps1 dev` or `./scripts/use-env.ps1 production` (swaps `.env`, clears caches) |

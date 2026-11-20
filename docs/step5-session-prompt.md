@@ -5,7 +5,7 @@ For the Claude Code session that runs Step 5. Read this first, then the Step 5 s
 
 ## State when this was written
 
-- Site: https://fullscale-rehearsal.ddev.site, in the **production** environment (`CRAFT_ENVIRONMENT=production`, devMode off, `allowAdminChanges` false). Docker Desktop and DDEV must be running (see NOTES "After a restart"; run `ddev start` from `D:\code\craft-demo` with an uppercase drive letter).
+- Site: https://fullscale-rehearsal.ddev.site, in the **production** environment (`CRAFT_ENVIRONMENT=production`, devMode off, `allowAdminChanges` false). Docker Desktop and DDEV must be running. **If anything says `ECONNREFUSED` or the site does not load, run `./scripts/start-site.ps1`** (it did not survive an overnight shutdown on two mornings).
 - Content: guides **Digital Equity** (5 chapters) and **Research and Measurement** (4 chapters), created by the Publisher over MCP. Both have chapters called Introduction, Getting Started and Taking It Forward, which is what case 6 needs.
 - Users (fake; passwords in `.local/credentials.txt`, git-ignored): drafter `maya.okafor` (Content Drafters), publisher `daniel.reyes` (Publishers), admin `admin`.
 - MCP server `craft-fullscale` is already added to Claude Code (local scope, both `d:/code/craft-demo` and `D:/code/craft-demo` project keys) at **`https://fullscale-rehearsal.ddev.site/admin/mcp/auth`**. It must be the `/auth` URL. `claude mcp list` shows "Needs authentication" until someone signs in.
