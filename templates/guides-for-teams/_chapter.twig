@@ -35,7 +35,7 @@
   {# The chapter title is the H2 under the guide title, or the page's H1 when the chapter comes first. #}
   {% set chapterTag = chapterFirst ? 'h1' : 'h2' %}
   {% set chapterTitleBlock %}
-    <{{ chapterTag }} class="chapter__title{{ chapterFirst ? ' chapter__title--lead' : '' }}">{{ entry.title }}</{{ chapterTag }}>
+    <{{ chapterTag }} class="chapter__title{{ chapterFirst ? ' chapter__title--lead' : '' }}">{{ entry.title|shout }}</{{ chapterTag }}>
     {% if entry.chapterSubtitle %}<p class="chapter__subtitle">{{ entry.chapterSubtitle }}</p>{% endif %}
   {% endset %}
 
