@@ -96,3 +96,20 @@ Times are the machine clock, taken from commit timestamps where possible. Overni
 | Case 13 as the publisher (09:34 to 09:41) | ~7 min | **Applies on day one.** |
 | Case 14 as the admin, production-mode checks, decisions and documentation (09:41 to about 09:50) | ~9 min | **Applies on day one.** |
 | **Step 5 active total (with the ~14 min of preparation above)** | **~63 min** | Replica numbers. |
+
+## Step 6: Claude Code workflow for template changes (local part)
+
+Times are the machine clock on 2026-11-23, taken from commit timestamps, so they include waiting for the sessions that ran the tests. The remote part (GitHub repository, branch protection, the first real CI run, and re-running test a to open a real pull request) is not done yet and waits for approval. A per-task split is not given because it would only be a guess; the milestones below are measured.
+
+| Milestone | Clock |
+|---|---|
+| Step 5 closed (docs research for Step 6 followed) | 09:47 |
+| Decisions recorded, `.mcp.json` committed | 09:55 |
+| Render check committed (after testing it live, on a broken template, and with the site off) | 09:59 |
+| Settings, hook and `/site-change` skill committed (after the deny-rule tests) | 10:05 |
+| CI workflow committed (after the dry run of every CI step in a clean clone) | 10:12 |
+| PowerShell coverage fix committed (found by the first staff-style test) | 10:16 |
+| Staff-style tests a to e, the hook-in-headless investigation, and the write-up | about 10:30 |
+| **Local part total** | **about 43 min active** (09:47 to about 10:30) |
+
+Day-one relevance: all of it applies. Adapting the folder names and paths, choosing a CI option (A, B or C in NOTES) once their hosting is known, and running the five tests against their site are the parts that take real time.
