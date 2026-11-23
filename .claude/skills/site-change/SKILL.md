@@ -3,7 +3,7 @@ name: site-change
 description: Change how the site looks or is laid out (sizes, spacing, colours, buttons, page layout) safely. Makes a branch, edits only templates and CSS, runs the render check, takes before and after pictures, and opens a pull request for a developer to review. Never merges.
 argument-hint: "[describe the change you want, in plain words]"
 disable-model-invocation: true
-allowed-tools: Bash(git status*) Bash(git diff*) Bash(git log*) Bash(git branch*) Bash(git switch *) Bash(git add templates*) Bash(git add web/assets/css*) Bash(git add docs/change-previews*) Bash(git commit *) Bash(git remote*) Bash(git push -u origin change/*) Bash(node scripts/render-check.mjs*) Bash(node scripts/change-shots.mjs*) Bash(gh repo view*) Bash(gh pr create*) Bash(gh pr view*)
+allowed-tools: Bash(git status*) Bash(git diff*) Bash(git log*) Bash(git branch*) Bash(git switch *) Bash(git add templates*) Bash(git add web/assets/css*) Bash(git add docs/change-previews*) Bash(git commit *) Bash(git remote*) Bash(git push -u origin change/*) Bash(node scripts/render-check.mjs*) Bash(node scripts/change-shots.mjs*) Bash(gh repo view*) Bash(gh pr create*) Bash(gh pr view*) PowerShell(git status*) PowerShell(git diff*) PowerShell(git log*) PowerShell(git branch*) PowerShell(git switch *) PowerShell(git add templates*) PowerShell(git add web/assets/css*) PowerShell(git add docs/change-previews*) PowerShell(git commit *) PowerShell(git remote*) PowerShell(git push -u origin change/*) PowerShell(node scripts/render-check.mjs*) PowerShell(node scripts/change-shots.mjs*) PowerShell(gh repo view*) PowerShell(gh pr create*) PowerShell(gh pr view*)
 ---
 
 # Site change
@@ -25,6 +25,8 @@ Stop and say that **a developer needs to do this**, without editing anything, if
 Never merge a pull request. Never push to `main`. Never force-push.
 
 ## Steps, in this order
+
+Run each command on its own. Do not join commands with `;`, `&&` or `|`: a joined command has to pass the permission rules for every part, so it is more likely to be refused.
 
 1. **Understand the request.** If it is vague (which pages? how much bigger? which colour?), ask up to three short questions in plain language and wait for the answers. Offer two or three concrete options when that helps. If it is clear, carry on without asking.
 2. **Start clean.** Run `git status`. If there are changes you did not make, stop and tell the person. Otherwise make a branch named `change/<short-description>` (lower case words joined with hyphens, at most 40 characters): `git switch -c change/<short-description>`. Use `<short-description>` again below as `<name>`.
