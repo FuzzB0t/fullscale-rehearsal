@@ -15,7 +15,7 @@ Run from `d:\code\craft-demo` in PowerShell. Docker Desktop must be running firs
 
 | Task | Command |
 |---|---|
-| Start from cold | `./scripts/start-site.ps1` (starts Docker Desktop if needed, runs `ddev start` from the right path, waits until the site and the MCP endpoint answer). **Use this after every restart.** An MCP sign-in that says `ECONNREFUSED` means the site is down. |
+| Start from cold | `./scripts/start-site.ps1` (starts Docker Desktop if needed, runs `ddev start` from the right path, waits until the site and the MCP endpoint answer). **Use this after every restart.** It ends with `READY` or `NOT READY`. An MCP sign-in that says `ECONNREFUSED` means the site is down; `Bad Gateway` means the containers are up but PHP is not running, which the script repairs with one `ddev restart`. If it says `NOT READY`, send the whole output. |
 | Start (already warm) | `ddev start` from `D:\code\craft-demo` with an uppercase drive letter (site: https://fullscale-rehearsal.ddev.site, CP: `/admin`) |
 | Stop | `ddev stop` (keeps data); `ddev poweroff` stops all DDEV projects |
 | Craft CLI | `ddev craft <command>` (check `ddev craft help <command>` first) |
