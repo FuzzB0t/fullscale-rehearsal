@@ -1,0 +1,60 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(/templates/**)",
+      "Edit(/web/assets/css/**)"
+    ],
+    "deny": [
+      "Edit(/config/**)",
+      "Edit(/composer.json)",
+      "Edit(/composer.lock)",
+      "Edit(/.env)",
+      "Edit(/.env.*)",
+      "Edit(/.ddev/**)",
+      "Read(/.env)",
+      "Read(/.env.*)",
+      "Bash(git push)",
+      "Bash(git push main)",
+      "Bash(git push main *)",
+      "Bash(git push * main)",
+      "Bash(git push * main *)",
+      "Bash(git push *:main)",
+      "Bash(git push *:main *)",
+      "Bash(git push *refs/heads/main*)",
+      "Bash(git push master)",
+      "Bash(git push master *)",
+      "Bash(git push * master)",
+      "Bash(git push * master *)",
+      "Bash(git push *:master)",
+      "Bash(git push *:master *)",
+      "Bash(git push --force*)",
+      "Bash(git push * --force*)",
+      "Bash(git push -f)",
+      "Bash(git push -f *)",
+      "Bash(git push * -f)",
+      "Bash(git push * -f *)",
+      "Bash(git push * +*)",
+      "Bash(git push --delete*)",
+      "Bash(git push * --delete*)",
+      "Bash(git push --mirror*)",
+      "Bash(git push * --mirror*)",
+      "Bash(gh pr merge*)",
+      "Bash(gh pr * --admin*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/render-check.mjs", "--hook"],
+            "timeout": 120
+          }
+        ]
+      }
+    ]
+  }
+}
