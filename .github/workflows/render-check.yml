@@ -1,0 +1,83 @@
+# The pull request gate for site changes. Branch protection on main requires both checks below to pass.
+#
+# NOT YET RUN ON GITHUB. The steps were rehearsed one by one in a clean local clone (composer install, env file,
+# setup/keys, install/craft, seeding, render check) and the YAML was parsed, but the runner itself, the action
+# versions and the hostname and certificate handling on a runner are unverified until the first real run.
+# See "What the CI check needs" in NOTES.md.
+name: Render check
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # Staff changes made with /site-change live on branches named change/<something>. Local permission rules only guide a
+  # person's own session, so this check is the one that holds on any machine: a change/* pull request may touch only
+  # templates, CSS and its own before/after pictures. Developer pull requests (any other branch name) skip it.
+  scope:
+    name: Only templates and CSS changed
+    if: startsWith(github.head_ref, 'change/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Check which files changed
+        run: |
+          changed=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
+          echo "Files changed in this pull request:"
+          echo "$changed"
+          outside=$(echo "$changed" | grep -v -E '^(templates/|web/assets/css/|docs/change-previews/)' || true)
+          if [ -n "$outside" ]; then
+            echo "::error title=Files outside templates and CSS::A change/* branch may only change templates/, web/assets/css/ and docs/change-previews/. Ask a developer to make these changes:"
+            echo "$outside"
+            exit 1
+          fi
+
+  # Builds the site from the repository alone, fills it with sample content, and loads every guide page.
+  render:
+    name: Render check
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+
+      # Starts DDEV from .ddev/config.yaml. DDEV writes .ddev/.env.web (database settings) itself on start.
+      - name: Set up DDEV
+        uses: ddev/github-action-setup-ddev@v1
+
+      - name: Install PHP dependencies
+        run: ddev composer install --no-interaction --no-progress
+
+      # .env is not in git. Use the example for dev, then let Craft generate this install's app ID and security key.
+      - name: Create the environment file
+        run: |
+          cp .env.example.dev .env
+          ddev craft setup/keys
+
+      # Installs Craft and applies config/project/ (sections, fields, entry types, user groups, MCP settings) in one step.
+      - name: Install Craft from project config
+        run: |
+          ddev craft install/craft --interactive=0 \
+            --username=ci --email=ci@example.test --password="$(openssl rand -hex 16)" \
+            --site-name="CI" --site-url="https://fullscale-rehearsal.ddev.site" --language=en-US
+          ddev craft project-config/diff
+
+      # Sample content through Craft's own element API (no SQL): one guide with two chapters and three resource cards.
+      - name: Seed sample content
+        run: ddev craft exec '(function(){ $mode="seed"; return require "/var/www/html/scripts/seed-fixtures.php"; })()'
+
+      - name: Render check
+        run: node scripts/render-check.mjs --base=https://fullscale-rehearsal.ddev.site --insecure
+
+      - name: Keep the logs if it failed
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: craft-logs
+          path: storage/logs/
+          if-no-files-found: ignore
+          retention-days: 7

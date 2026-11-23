@@ -35,9 +35,24 @@ if (HOOK) {
   if (file && !/\/(templates|web\/assets\/css)\//.test(file)) process.exit(0);   // some other file: nothing to check
 }
 
+/**
+ * Local DDEV on Windows copies files into the site with Mutagen, a few moments behind an edit. A hook that runs right
+ * after an edit could therefore check the OLD files and wrongly pass. Ask DDEV to sync first. Skipped in CI (a plain
+ * checkout, no sync) and ignored if DDEV is not found or the project does not use Mutagen: it only ever makes the
+ * check more accurate.
+ */
+function syncFiles() {
+  if (process.env.CI || args['no-sync']) return;
+  const candidates = ['ddev', ...(process.platform === 'win32' && process.env.LOCALAPPDATA ? [`${process.env.LOCALAPPDATA}\\Programs\\DDEV\\ddev.exe`] : [])];
+  for (const ddev of candidates) {
+    try { execFileSync(ddev, ['mutagen', 'sync'], { stdio: 'ignore', timeout: 60000 }); return; } catch { /* try the next candidate */ }
+  }
+}
+
 /** Fetch a URL with curl. Returns { status, body, curlError }. */
 function fetchPage(url) {
-  const curlArgs = ['-sS', '--max-time', '40', ...(process.platform === 'win32' ? ['--ssl-no-revoke'] : []),
+  // --insecure skips certificate checks: for CI only, where the runner may not trust DDEV's local certificate.
+  const curlArgs = ['-sS', '--max-time', '40', ...(process.platform === 'win32' ? ['--ssl-no-revoke'] : []), ...(args.insecure ? ['-k'] : []),
     '-w', '\n__STATUS__%{http_code}', url];
   try {
     const out = execFileSync('curl', curlArgs, { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -66,6 +81,7 @@ function explainFailure(page) {
 }
 
 // --- Crawl ---------------------------------------------------------------------------------------------------------
+syncFiles();
 const seedPath = SEED.startsWith('/') ? SEED : `/${SEED}`;
 const queue = [seedPath];
 const seen = new Set();
