@@ -135,3 +135,5 @@ if (HOOK) {
 }
 console.error(report);
 process.exit(1);
+
+// CI scope test: a staff change must not touch scripts/.
