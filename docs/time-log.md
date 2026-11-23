@@ -99,7 +99,7 @@ Times are the machine clock, taken from commit timestamps where possible. Overni
 
 ## Step 6: Claude Code workflow for template changes (local part)
 
-Times are the machine clock on 2026-11-23, taken from commit timestamps, so they include waiting for the sessions that ran the tests. The remote part (GitHub repository, branch protection, the first real CI run, and re-running test a to open a real pull request) is not done yet and waits for approval. A per-task split is not given because it would only be a guess; the milestones below are measured.
+Times are the machine clock on 2026-11-23, taken from commit timestamps, so they include waiting for the sessions that ran the tests. The remote part (GitHub repository, the first real CI runs, and re-running test a to open a real pull request) is timed in the next section. A per-task split is not given because it would only be a guess; the milestones below are measured.
 
 | Milestone | Clock |
 |---|---|
@@ -113,3 +113,20 @@ Times are the machine clock on 2026-11-23, taken from commit timestamps, so they
 | **Local part total** | **about 43 min active** (09:47 to about 10:30) |
 
 Day-one relevance: all of it applies. Adapting the folder names and paths, choosing a CI option (A, B or C in NOTES) once their hosting is known, and running the five tests against their site are the parts that take real time.
+
+## Step 6: the remote and the first real CI runs
+
+Times are the machine clock on 2026-11-23 (GitHub's timestamps are UTC, six hours ahead). Installing `gh`, the user's sign-in and first push, and the decision pauses were waiting on the user and were not timed.
+
+| Milestone | Clock |
+|---|---|
+| Private repository created (empty) | 15:19 |
+| Test a, first attempt: stopped by the workspace-trust path problem (finding 9), cleaned up, restarted from Git Bash | before 15:24 |
+| Test a, second attempt: session of 86 s; pull request #1 opened | 15:26 |
+| Pull request #1: both checks green (render check 1 min 21 s) | 15:27 |
+| Pull requests #2 (broken template) and #3 (out-of-scope file) opened; both failed as expected | 15:28 to about 15:30 |
+| Fix pushed to #2; both checks green (render check 1 min 55 s) | 15:36 |
+| Test pull requests closed, branches and worktrees removed | 15:37 |
+| **Repository created to cleanup** | **about 18 min**, of which about 10 min was waiting for CI runs |
+
+The write-up in NOTES.md came after this and is not timed. Day-one relevance: a first CI run on a real repository took one attempt here because the dry run in a clean clone had already found the problems. Expect more on their setup if CI cannot build the site (option B or C in NOTES).
