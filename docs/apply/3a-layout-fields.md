@@ -77,7 +77,8 @@ block before or after the guide heading, wrap the "In this section" include in `
 6. **Whitespace.** Twig `{% set %}` capture adds blank space to the HTML. Compare before and after with whitespace around tags normalised, plus screenshots. Raw byte comparison will show false differences.
 7. **Merge hotspots in project config:** `project.yaml` (`dateModified`, `meta.__names__`) and the guide entry type file.
 8. **Control-panel permissions.** Anyone who can edit a guide can change these three fields. With the Drafters group (step 3b) that stays a draft until a Publisher applies it.
-9. **MCP (not yet tested).** The fields are ordinary custom fields on the guide, so the `elements_*` tools should be able to read and set them, and a dropdown should take the option **value** (`chapterFirst`), not the label. This is an expectation, not a result. Step 5 case 13 will confirm it, and this line will be updated from NOTES.md then.
+9. **MCP: confirmed in Step 5.** The fields are ordinary custom fields on the guide. `elements_field_schema` lists `layoutHeadline` as `enum: guideFirst, chapterFirst`, so a dropdown takes the option **value**, not the label. A bad value is rejected with a message that names the allowed values. A drafter changed all three through a draft and the live pages did not change until a Publisher applied it (NOTES, cases 5 and 13).
+10. **You cannot preview this change from the guide draft.** The layout only appears on chapter pages, and chapter pages read the *live* guide. Craft's Preview of a guide draft shows the guide page, which does not change. Tell staff a Publisher checks the chapter pages after applying. Rolling back is clean (`revisions_apply` on the older revision; Step 5 case 13). If staff need a preview, add a small preview-only banner to the guide page that lists the pending settings.
 
 ## Verify (about 15 minutes)
 

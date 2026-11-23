@@ -84,3 +84,15 @@ Times from the machine clock. The users were created in Step 3b and reused here.
 | Connect the real Claude Code client: found the endpoint URL problem (`/admin/mcp` rejected, `/admin/mcp/auth` accepted) and that it needs no CA variable | ~8 min | **Applies on day one**: give staff the `/auth` URL. Saves a support round. |
 | Hand-off file for the session that runs the 15 cases | ~3 min | |
 | **Preparation so far** | **~14 min** | 2026-11-19, ~14:36 to 14:37 (machine clock). The 15 cases themselves are not run yet. |
+
+## Step 5: MCP rehearsal (run)
+
+Times are the machine clock, taken from commit timestamps where possible. Overnight and weekend gaps, and the time spent waiting for you to sign in, are not counted.
+
+| Task | Time | Day-one relevance |
+|---|---|---|
+| Cases 1 to 12 and 15 as the drafter (2026-11-20, 14:10 to 14:23) | ~13 min | **Applies on day one**: the same cases against their staging site, about 30 to 45 min with sign-ins. |
+| Site down after the weekend: diagnose, rebuild and test `scripts/start-site.ps1` (2026-11-23, ended 09:34) | ~20 min (estimate; the start was not clocked) | Local only. |
+| Case 13 as the publisher (09:34 to 09:41) | ~7 min | **Applies on day one.** |
+| Case 14 as the admin, production-mode checks, decisions and documentation (09:41 to about 09:50) | ~9 min | **Applies on day one.** |
+| **Step 5 active total (with the ~14 min of preparation above)** | **~63 min** | Replica numbers. |
