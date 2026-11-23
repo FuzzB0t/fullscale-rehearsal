@@ -56,7 +56,7 @@ img { max-width: 100%; height: auto; }
 .in-this-section__label { margin: 0 0 8px; font-size: 0.75rem; letter-spacing: 0.12em; color: var(--muted); }
 .in-this-section ul { margin: 0; padding-left: 18px; }
 
-.chapter__title { font-size: 1.8rem; margin: 24px 0 4px; }
+.chapter__title { font-size: 2.1rem; margin: 48px 0 4px; }
 .chapter__subtitle { color: var(--muted); margin: 0 0 16px; }
 .chapter__media { margin: 16px 0 24px; }
 .chapter__media--video { position: relative; aspect-ratio: 16 / 9; }
@@ -86,5 +86,5 @@ img { max-width: 100%; height: auto; }
    None of these classes appear in the default layout. */
 .chapter-menu--sticky { position: sticky; top: 0; z-index: 10; background: var(--bg); }
 .guide-heading--secondary .guide-heading__title { font-size: 1.1rem; font-weight: 700; margin: 0 0 4px; }
-.chapter__title--lead { font-size: 2.2rem; margin-top: 24px; }
-@media (max-width: 640px) { .chapter__title--lead { font-size: 1.8rem; } }
+.chapter__title--lead { font-size: 2.5rem; margin-top: 48px; }
+@media (max-width: 640px) { .chapter__title { font-size: 1.9rem; } .chapter__title--lead { font-size: 2.1rem; } }
