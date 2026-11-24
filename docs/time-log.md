@@ -129,4 +129,6 @@ Times are the machine clock on 2026-11-23 (GitHub's timestamps are UTC, six hour
 | Test pull requests closed, branches and worktrees removed | 15:37 |
 | **Repository created to cleanup** | **about 18 min**, of which about 10 min was waiting for CI runs |
 
+Next day (2026-11-24): branch protection was set on `main` after the user made the repository public, then the two fixes (phone pictures, layout fixtures) were built and tested locally and opened as pull request #4. Its CI run finished at 10:04; the start of the work was not recorded, so no duration is given.
+
 The write-up in NOTES.md came after this and is not timed. Day-one relevance: a first CI run on a real repository took one attempt here because the dry run in a clean clone had already found the problems. Expect more on their setup if CI cannot build the site (option B or C in NOTES).
