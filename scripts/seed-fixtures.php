@@ -2,8 +2,9 @@
 /**
  * Test fixtures for the replica Guides for Teams section (THROWAWAY with the replica).
  *
- * Creates (or removes) a clearly-labelled fixture guide with two chapters, using Craft's own
- * element API. No raw SQL. Used to check the templates, and later to give CI something to render.
+ * Creates (or removes) two clearly-labelled fixture guides with two chapters each: one in the default layout and one
+ * that uses every layout option (see below), using Craft's own element API. No raw SQL. Used to check the templates,
+ * and to give CI something to render.
  *
  * Run through Craft's `exec` command (it evaluates one expression), so pass the mode via a closure:
  *
@@ -97,4 +98,31 @@ $make('chapter', 'Fixture chapter two', 'fixture-chapter-two', [
     'chapterBody' => '<p>A second chapter with a single paragraph and no section headings.</p>',
 ], $guide->id);
 
-return json_encode(['removed' => $removed, 'created' => ['fixture-guide', 'fixture-chapter-one', 'fixture-chapter-two']]);
+// A second guide that switches on every layout option (portable change 3a) and gives one chapter a video, so the
+// render check also covers the chapter-first headline, the sticky chapter menu, a hidden "In this section" list and
+// the video embed. Not covered: a chapter with a hero image, because that needs an uploaded asset.
+$layoutGuide = $make('guide', 'Fixture guide: alternate layout (delete me)', 'fixture-guide-layout', [
+    'guideTagline' => 'A fixture guide that uses every layout option.',
+    'layoutHeadline' => 'chapterFirst',
+    'layoutStickyMenu' => true,
+    'layoutShowInSection' => false,
+]);
+
+$make('chapter', 'Fixture layout chapter one', 'fixture-layout-chapter-one', [
+    'chapterSubtitle' => 'A chapter with a video, section headings and cards, in the alternate layout.',
+    'chapterVideoUrl' => ['type' => 'url', 'value' => 'https://www.youtube.com/watch?v=fixture0000'],
+    'chapterBody' => $body1,
+    'chapterResourceCards' => [
+        'new1' => $card('strategyCard', 'Strategy: try the other layout', 'A strategy card under the alternate layout.', 'https://example.com/strategy-2'),
+    ],
+], $layoutGuide->id);
+
+$make('chapter', 'Fixture layout chapter two', 'fixture-layout-chapter-two', [
+    'chapterSubtitle' => 'A second chapter in the alternate layout, with no video or cards.',
+    'chapterBody' => '<p>A plain chapter in the alternate layout.</p>',
+], $layoutGuide->id);
+
+return json_encode(['removed' => $removed, 'created' => [
+    'fixture-guide', 'fixture-chapter-one', 'fixture-chapter-two',
+    'fixture-guide-layout', 'fixture-layout-chapter-one', 'fixture-layout-chapter-two',
+]]);
